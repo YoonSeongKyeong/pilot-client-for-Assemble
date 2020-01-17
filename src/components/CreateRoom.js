@@ -34,7 +34,7 @@ class CreateRoom extends React.Component {
     return (
       <div>
 
-        <button onClick={this.props.handleCreateRoomOff}>Back To Home</button> 
+        <button onClick={this.props.handleCreateRoomOff}>Close</button> 
         <input className="roomname"
           onChange={e => this.updateRoomname(e.target.value)}
           value={this.state.roomname}

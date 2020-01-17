@@ -16,14 +16,15 @@ export default function(state = initialState, action) {
     case JOIN_ROOM_SUCCESS: {
       return {
         ...state,
-        isRoomCreationSuccess:true,
-        waitingRoomJoin:false
+        isRoomJoinSuccess:true,
+        waitingRoomJoin:false,
+        roomId: action.roomId
       };
     }
     case JOIN_ROOM_FAILURE: {
       return {
         ...state,
-        isRoomCreationSuccess:false,
+        isRoomJoinSuccess:false,
         waitingRoomJoin:false
       };
     }

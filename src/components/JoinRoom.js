@@ -23,7 +23,7 @@ class JoinRoom extends React.Component {
     this.props.joinRoom({
         roomId: this.state.roomId, 
         password: this.state.password 
-    });
+    }, this.props);
     this.setState({ 
         roomId: "",
         password: ""
@@ -33,7 +33,7 @@ class JoinRoom extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.props.handleJoinRoomOff}>BackToHome</button> 
+        <button onClick={this.props.handleJoinRoomOff}>Close</button> 
         <input className="roomId"
           onChange={e => this.updateRoomId(e.target.value)}
           value={this.state.roomId}

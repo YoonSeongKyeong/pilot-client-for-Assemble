@@ -38,7 +38,7 @@ export default class Home extends Component {
         }
         {
         isJoinRoomOn ? 
-        <JoinRoom handleJoinRoomOff={this.handleJoinRoomOff}/> : 
+        <JoinRoom handleJoinRoomOff={this.handleJoinRoomOff} history={this.props.history}/> : 
         <div onClick={()=>this.handleJoinRoomOn()}>JoinRoom</div>
         }
       </div>

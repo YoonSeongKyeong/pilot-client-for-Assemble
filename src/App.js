@@ -1,6 +1,7 @@
 import React from 'react';
 // import {Route, Switch} from 'react-router-dom';
-import { Home } from './pages';
+import { Home, Room } from './pages';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 class App extends React.Component {
   state = {};
@@ -8,7 +9,12 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Home />
+        <Router>
+          <Switch>
+            <Route path="/rooms/:roomId" component={Room} />
+            <Route path="/" component={Home} />
+          </Switch>
+        </Router>
       </div>
     );
   }
