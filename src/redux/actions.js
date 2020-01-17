@@ -99,12 +99,13 @@ export const joinUser = (form, props) => (dispatch, getState) => {
   dispatch({
     type: JOIN_USER_REQUEST,
   })
+  debugger
   let {roomId} = getState().joinRoom
   Axios.get(`http://localhost:3000/rooms/${roomId}/people/${form.username}`).then(
     (res) => {// process after joining user finished
       dispatch({type: JOIN_USER_SUCCESS, username: form.username})
       alert("JOIN USER SUCCESS. now connecting...")
-      props.history.push(`/people/${form.username}`)
+      props.history.push(`${props.history.location.pathname}/people/${form.username}`)
     },
     (error) => {
       dispatch({type: JOIN_USER_FAILURE, error: error})

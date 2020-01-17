@@ -14,8 +14,8 @@ class JoinUser extends React.Component {
     this.setState({ username });
   };
 
-  handleJoinRoom = () => {
-    this.props.joinRoom({
+  handleJoinUser = () => {
+    this.props.joinUser({
         username: this.state.username
     }, this.props);
     this.setState({ 
@@ -32,7 +32,7 @@ class JoinUser extends React.Component {
           value={this.state.roomId}
         />
         <button className="join-user" onClick={this.handleJoinUser}>
-          Join Room
+          Join USER
         </button>
       </div>
     );

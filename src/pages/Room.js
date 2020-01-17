@@ -38,7 +38,7 @@ export default class Room extends Component {
         }
         {
         isJoinUserOn ? 
-        <JoinUser handleJoinUserOff={this.handleJoinUserOff}/> : 
+        <JoinUser handleJoinUserOff={this.handleJoinUserOff} history={this.props.history}/> : 
         <div onClick={()=>this.handleJoinUserOn()}>JoinUser</div>
         }
       </div>
