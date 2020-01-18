@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import CreateUser from "../components/CreateUser";
 import JoinUser from "../components/JoinUser";
+import OffRoom from "../components/OffRoom";
 
 export default class Room extends Component {
   constructor(props) {
@@ -31,6 +32,7 @@ export default class Room extends Component {
     let {isCreateUserOn, isJoinUserOn} = this.state
     return (
       <div>
+        <OffRoom history={this.props.history}/>
         {
         isCreateUserOn ? 
         <CreateUser handleCreateUserOff={this.handleCreateUserOff}/> : 

@@ -8,6 +8,7 @@ import {
   JOIN_ROOM_REQUEST,
   JOIN_ROOM_SUCCESS,
   JOIN_ROOM_FAILURE,
+  OFF_ROOM,
   CREATE_USER_REQUEST,
   CREATE_USER_SUCCESS,
   CREATE_USER_FAILURE,
@@ -74,6 +75,21 @@ export const joinRoom = (form, props) => (dispatch, getState) => {
     (error) => {
       dispatch({type: JOIN_ROOM_FAILURE, error: error})
     alert("JOINING ROOM FAILURE. 정확하지 않은 입력입니다.")
+  })
+};
+
+export const offRoom = (history) => (dispatch, getState) => {// offRoom has reducer in reducers/joinROOM
+  debugger
+  Axios.get(`http://localhost:3000/rooms/disconnect`).then(
+    (res) => {// process after joining room finished
+      alert("OFF ROOM SUCCESS. now connecting...")
+      history.push('/')
+      dispatch({
+        type: OFF_ROOM,
+      })
+    },
+    (error) => {
+    alert("OFF ROOM FAILED")
   })
 };
 

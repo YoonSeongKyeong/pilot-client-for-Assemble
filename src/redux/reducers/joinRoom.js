@@ -1,8 +1,9 @@
-import { JOIN_ROOM_REQUEST, JOIN_ROOM_SUCCESS, JOIN_ROOM_FAILURE } from "../actionTypes";
+import { JOIN_ROOM_REQUEST, JOIN_ROOM_SUCCESS, JOIN_ROOM_FAILURE, OFF_ROOM } from "../actionTypes";
 
 const initialState = {
     isRoomJoinSuccess: false,
-    waitingRoomJoin: false
+    waitingRoomJoin: false,
+    roomId: null
 };
 
 export default function(state = initialState, action) {
@@ -26,6 +27,12 @@ export default function(state = initialState, action) {
         ...state,
         isRoomJoinSuccess:false,
         waitingRoomJoin:false
+      };
+    }
+    case OFF_ROOM: {
+      return {
+        ...state,
+        roomId: null
       };
     }
     default:
