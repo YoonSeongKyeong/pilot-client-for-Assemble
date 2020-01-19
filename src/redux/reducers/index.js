@@ -4,5 +4,6 @@ import todos from "./todos";
 import createRoom from "./createRoom";
 import joinRoom from "./joinRoom";
 import createUser from "./createUser";
+import joinUser from "./joinUser";
 
-export default combineReducers({ todos, visibilityFilter, createRoom, joinRoom, createUser});
+export default combineReducers({ todos, visibilityFilter, createRoom, joinRoom, createUser, joinUser});

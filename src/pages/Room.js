@@ -2,14 +2,20 @@ import React, { Component } from 'react'
 import CreateUser from "../components/CreateUser";
 import JoinUser from "../components/JoinUser";
 import OffRoom from "../components/OffRoom";
+import { connect } from "react-redux";
+import { shortcutFromMemory } from "../redux/actions";
 
-export default class Room extends Component {
+class Room extends Component {
   constructor(props) {
     super(props);
     this.state = { 
         isCreateUserOn: false,
         isJoinUserOn: false
     };
+  }
+
+  componentDidMount = () => {
+    this.props.shortcutFromMemory(this.props)
   }
 
   handleCreateUserOn = ()=>{
@@ -47,3 +53,8 @@ export default class Room extends Component {
     )
   }
 }
+
+export default connect(
+  null,
+  { shortcutFromMemory }
+)(Room);

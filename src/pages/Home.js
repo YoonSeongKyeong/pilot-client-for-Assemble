@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
 import CreateRoom from "../components/CreateRoom";
 import JoinRoom from "../components/JoinRoom";
+import { connect } from "react-redux";
+import { shortcutFromMemory } from "../redux/actions";
 
-export default class Home extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { 
         isCreateRoomOn: false,
         isJoinRoomOn: false
     };
+  }
+
+  componentDidMount = () => {
+    this.props.shortcutFromMemory(this.props)
   }
 
   handleCreateRoomOn = ()=>{
@@ -45,3 +51,8 @@ export default class Home extends Component {
     )
   }
 }
+
+export default connect(
+  null,
+  { shortcutFromMemory }
+)(Home);

@@ -1,8 +1,9 @@
-import { JOIN_USER_REQUEST, JOIN_USER_SUCCESS, JOIN_USER_FAILURE } from "../actionTypes";
+import { JOIN_USER_REQUEST, JOIN_USER_SUCCESS, JOIN_USER_FAILURE, MEMORY_EMPTY, MEMORY_JOIN_ROOM, MEMORY_JOIN_USER, MEMORY_REQUEST } from "../actionTypes";
 
 const initialState = {
     isUserJoinSuccess: false,
-    waitingUserJoin: false
+    waitingUserJoin: false,
+    username: null
 };
 
 export default function(state = initialState, action) {
@@ -26,6 +27,35 @@ export default function(state = initialState, action) {
         ...state,
         isUserJoinSuccess:false,
         waitingUserJoin:false
+      };
+    }
+    case MEMORY_REQUEST: {
+      return {
+        ...state,
+        waitingUserJoin: true
+      };
+    }
+    case MEMORY_JOIN_USER: {
+      return {
+        ...state,
+        username: action.username,
+        isUserJoinSuccess: true,
+        waitingUserJoin: false
+      };
+    }
+    case MEMORY_JOIN_ROOM: {
+      return {
+        ...state,
+        username: action.username,
+        isUserJoinSuccess: true,
+        waitingUserJoin: false
+      };
+    }
+    case MEMORY_EMPTY: {
+      return {
+        ...state,
+        username: null,
+        waitingUserJoin: false
       };
     }
     default:

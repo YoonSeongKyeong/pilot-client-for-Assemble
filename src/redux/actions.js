@@ -9,6 +9,10 @@ import {
   JOIN_ROOM_SUCCESS,
   JOIN_ROOM_FAILURE,
   OFF_ROOM,
+  MEMORY_REQUEST,
+  MEMORY_JOIN_ROOM,
+  MEMORY_JOIN_USER,
+  MEMORY_EMPTY,
   CREATE_USER_REQUEST,
   CREATE_USER_SUCCESS,
   CREATE_USER_FAILURE,
@@ -66,21 +70,60 @@ export const joinRoom = (form, props) => (dispatch, getState) => {
   })
   Axios.post(`http://localhost:3000/rooms/${form.roomId}`, {
     password: form.password
-  }).then(
+  }, {withCredentials: true}).then(
     (res) => {// process after joining room finished
+      debugger
       dispatch({type: JOIN_ROOM_SUCCESS, roomId: form.roomId})
       alert("JOIN ROOM SUCCESS. now connecting...")
       props.history.push(`/rooms/${form.roomId}`)
     },
     (error) => {
-      dispatch({type: JOIN_ROOM_FAILURE, error: error})
-    alert("JOINING ROOM FAILURE. 정확하지 않은 입력입니다.")
+      dispatch({type: JOIN_ROOM_FAILURE, error})
+      alert("JOIN ROOM FAILURE.")
+  })
+};
+
+export const shortcutFromMemory = (props) => (dispatch, getState) => {
+  debugger
+  dispatch({
+    type: MEMORY_REQUEST,
+  })
+  Axios.get(`http://localhost:3000/rooms/memory`, {withCredentials: true}).then(
+    (res) => {// process after fetching memory finished
+      debugger
+      if(res.data.room_id) {
+        let roomId = res.data.room_id
+        if(res.data.name) {
+          let username = res.data.name
+          alert(`DIRECTLY JOINING TO USER : ${username} IN ROOM : ${roomId}`)
+          dispatch({type: MEMORY_JOIN_USER, username: username, roomId: roomId })
+          props.history.push(`/rooms/${roomId}/people/${username}`)
+        }
+        else {
+          alert(`DIRECTLY JOINING TO ROOM : ${roomId}`)
+          dispatch({type: MEMORY_JOIN_ROOM, roomId: roomId })
+          props.history.push(`/rooms/${roomId}`)
+        }
+      }
+      else {
+        dispatch({type: MEMORY_EMPTY})
+        if(props.history.location.pathname !== '/') {
+          alert(`NOT AUTHORIZED YET, PLEASE CREATE OR JOIN THE ROOM`)
+          props.history.push(`/`)
+        }
+      }
+    },
+    (error) => {
+      dispatch({type: MEMORY_EMPTY})
+      if(props.history.location.pathname !== '/') {
+        alert(`NOT AUTHORIZED YET, PLEASE CREATE OR JOIN THE ROOM`)
+        props.history.push(`/`)
+      }
   })
 };
 
 export const offRoom = (history) => (dispatch, getState) => {// offRoom has reducer in reducers/joinROOM
-  debugger
-  Axios.get(`http://localhost:3000/rooms/disconnect`).then(
+  Axios.get(`http://localhost:3000/rooms/disconnect`, {withCredentials: true}).then(
     (res) => {// process after joining room finished
       alert("OFF ROOM SUCCESS. now connecting...")
       history.push('/')
@@ -117,7 +160,7 @@ export const joinUser = (form, props) => (dispatch, getState) => {
   })
   debugger
   let {roomId} = getState().joinRoom
-  Axios.get(`http://localhost:3000/rooms/${roomId}/people/${form.username}`).then(
+  Axios.get(`http://localhost:3000/rooms/${roomId}/people/${form.username}`, {withCredentials: true}).then(
     (res) => {// process after joining user finished
       dispatch({type: JOIN_USER_SUCCESS, username: form.username})
       alert("JOIN USER SUCCESS. now connecting...")
