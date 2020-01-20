@@ -9,7 +9,11 @@ import {
     SUBMIT_ACTIVITY_SUCCESS,
     SUBMIT_ACTIVITY_FAILURE,
     OFF_USER,
-    NEW_ACTIVITY_LIST
+    NEW_ACTIVITY_LIST,
+    NEW_MENU_LIST,
+    SUBMIT_MENU_REQUEST,
+    SUBMIT_MENU_SUCCESS,
+    SUBMIT_MENU_FAILURE
 } from "../actionTypes";
 
 const initialState = {
@@ -19,6 +23,8 @@ const initialState = {
     waitingConnectSocket: false,
     isSubmitActivitySuccess: false,
     waitingSubmitActivity: false,
+    isSubmitMenuSuccess: false,
+    waitingSubmitMenu: false,
     roomId: "",
     roomname: "",
     restScheduleObj: {},
@@ -161,6 +167,8 @@ export default function (state = initialState, action) {
                 waitingConnectSocket: false,
                 isSubmitActivitySuccess: false,
                 waitingSubmitActivity: false,
+                isSubmitMenuSuccess: false,
+                waitingSubmitMenu: false,
                 roomId: "",
                 roomname: "",
                 restScheduleObj: {},
@@ -239,22 +247,101 @@ export default function (state = initialState, action) {
         case SUBMIT_ACTIVITY_REQUEST: {
             return {
                 ...state,
-                waitingConnectSocket: true
+                waitingSubmitActivity: true
             };
         }
         case SUBMIT_ACTIVITY_SUCCESS: {
             return {
                 ...state,
-                isConnectSocketSuccess: true,
-                waitingConnectSocket: false,
+                isSubmitActivitySuccess: true,
+                waitingSubmitActivity: false,
                 socketId: action.socketId
             };
         }
         case SUBMIT_ACTIVITY_FAILURE: {
             return {
                 ...state,
-                isConnectSocketSuccess: false,
-                waitingConnectSocket: false
+                isSubmitActivitySuccess: false,
+                waitingSubmitActivity: false
+            };
+        }
+        case NEW_MENU_LIST: {
+            debugger
+            let {myself, people, restMenuObj} = state
+            let {updaterName, menu_list} = action
+            for(let person of people) {
+                if (person.name === updaterName) {
+                    if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 menu_list를 덮어쓴다.
+                        let myMenuObj = {}
+                        for(let eachMenu of menu_list) {
+                            let {content, isFavor} = eachMenu
+                            myMenuObj[content] = { content: content, likes: 0, dislikes:0 }
+                            if (isFavor === true ) { myMenuObj[content].likes += 1 }
+                            else if (isFavor === false ) { myMenuObj[content].dislikes += 1 }
+                        }
+                        return {
+                            ...state,
+                            myself: {...myself, menu_list: menu_list},
+                            myMenuObj: myMenuObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, menu_list : menu_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                    else {// oldMenuList를 갖고와서 restObj에서 빼고, restObj에 newMenuList를 더한다. 이후 person의 menu_list를 덮어쓴다.
+                        let oldMenuList = person.menu_list
+                        restMenuObj = {...restMenuObj}
+                        for(let oldMenu of oldMenuList) {
+                            let {content, isFavor} = oldMenu
+                            let targetObj = restMenuObj[content]
+                            restMenuObj[content] = { content: content, likes: targetObj.likes-(isFavor?1:0), dislikes: targetObj.dislikes-(isFavor?0:1)}
+                        }
+                        for(let newMenu of menu_list) {
+                            let {content, isFavor} = newMenu
+                            let targetObj = restMenuObj[content]
+                            if(targetObj!==undefined) {
+                                restMenuObj[content] = { content: content, likes: targetObj.likes+(isFavor?1:0), dislikes: targetObj.dislikes+(isFavor?0:1)}
+                            } else {
+                                restMenuObj[content] = { content: content, likes: (isFavor?1:0), dislikes: (isFavor?0:1)}
+                            }
+                        }
+                        return {
+                            ...state,
+                            restMenuObj: restMenuObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, menu_list : menu_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        case SUBMIT_MENU_REQUEST: {
+            return {
+                ...state,
+                waitingSubmitMenu: true
+            };
+        }
+        case SUBMIT_MENU_SUCCESS: {
+            return {
+                ...state,
+                isSubmitMenuSuccess: true,
+                waitingSubmitMenu: false,
+                socketId: action.socketId
+            };
+        }
+        case SUBMIT_MENU_FAILURE: {
+            return {
+                ...state,
+                isSubmitMenuSuccess: false,
+                waitingSubmitMenu: false
             };
         }
         default:

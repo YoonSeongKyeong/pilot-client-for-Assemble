@@ -29,7 +29,11 @@ import {
   NEW_ACTIVITY_LIST,
   SUBMIT_ACTIVITY_REQUEST,
   SUBMIT_ACTIVITY_SUCCESS,
-  SUBMIT_ACTIVITY_FAILURE
+  SUBMIT_ACTIVITY_FAILURE,
+  NEW_MENU_LIST,
+  SUBMIT_MENU_REQUEST,
+  SUBMIT_MENU_SUCCESS,
+  SUBMIT_MENU_FAILURE
 } from "./actionTypes";
 import Axios from "axios";
 import socketio from 'socket.io-client';
@@ -135,6 +139,7 @@ let processAfterJoinUser = (dispatch, getState) => {
       });
       socket.on('new person', (msg) => {
         console.log("new person: ", msg);
+          // 새 person이 들어왔을 때의 로직
       });
       socket.on('delete person', (msg) => {
         console.log("delete person: ", msg);
@@ -144,6 +149,9 @@ let processAfterJoinUser = (dispatch, getState) => {
       });
       socket.on('new activity_list', ({name, activity_list}) => {
         dispatch({ type: NEW_ACTIVITY_LIST, updaterName: name, activity_list: activity_list })
+      });
+      socket.on('new menu_list', ({name, menu_list}) => {
+        dispatch({ type: NEW_MENU_LIST, updaterName: name, menu_list: menu_list })
       });
   })();
 }
@@ -274,5 +282,23 @@ export const submitActivity = (activity_list) => (dispatch, getState) => {
     (error) => {
       dispatch({type: SUBMIT_ACTIVITY_FAILURE, error: error})
       alert("POST ACTIVITY FAILURE.")
+    })
+};
+
+export const submitMenu = (menu_list) => (dispatch, getState) => {
+  dispatch({
+    type: SUBMIT_MENU_REQUEST,
+  })
+  let {roomId, myself:{name}} = getState().realtimeManager
+  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/menu_list`, {
+    menu_list: menu_list
+  }).then(
+    (res) => {
+      dispatch({type: SUBMIT_MENU_SUCCESS})
+      alert("POST MENU SUCCESS.")
+    },
+    (error) => {
+      dispatch({type: SUBMIT_MENU_FAILURE, error: error})
+      alert("POST MENU FAILURE.")
     })
 };
