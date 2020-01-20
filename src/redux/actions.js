@@ -26,7 +26,10 @@ import {
   CONNECT_SOCKET_SUCCESS,
   CONNECT_SOCKET_FAILURE,
   OFF_USER,
-  NEW_ACTIVITY_LIST
+  NEW_ACTIVITY_LIST,
+  SUBMIT_ACTIVITY_REQUEST,
+  SUBMIT_ACTIVITY_SUCCESS,
+  SUBMIT_ACTIVITY_FAILURE
 } from "./actionTypes";
 import Axios from "axios";
 import socketio from 'socket.io-client';
@@ -256,15 +259,20 @@ export const offUser = (history) => (dispatch, getState) => {// offUser has redu
   })
 };
 
-// export const createActivity = (content, isFavor) => ({
-//   type: CREATE_ACTIVITY,
-//   newActivity: {
-//     content: content,
-//     isFavor: isFavor
-//   }
-// })
-
-export const submitActivity = () => (dispatch, getState) => {
+export const submitActivity = (activity_list) => (dispatch, getState) => {
+  dispatch({
+    type: SUBMIT_ACTIVITY_REQUEST,
+  })
+  let {roomId, myself:{name}} = getState().realtimeManager
+  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/activity_list`, {
+    activity_list: activity_list
+  }).then(
+    (res) => {
+      dispatch({type: SUBMIT_ACTIVITY_SUCCESS})
+      alert("POST ACTIVITY SUCCESS.")
+    },
+    (error) => {
+      dispatch({type: SUBMIT_ACTIVITY_FAILURE, error: error})
+      alert("POST ACTIVITY FAILURE.")
+    })
 };
-
-// export const clearChangeInActivity = () => ({type: CLEAR_CHANGE_IN_ACTIVITY});

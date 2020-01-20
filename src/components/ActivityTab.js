@@ -37,8 +37,20 @@ class ActivityTab extends React.Component {
     this.setState({myActivityObj: newObj})
   }
 
+  clearChangeInActivity = () => {
+    this.setState({myActivityObj: this.props.realtimeManager.myActivityObj})
+  }
+
   toggleLike = () => {
     this.setState({isFavor: !this.state.isFavor})
+  }
+
+  onSubmitActivity = () => {
+    this.props.submitActivity(
+      Object.values(this.state.myActivityObj).filter(ele=>!!ele).map(eachActivity=>({
+      content:eachActivity.content,
+      isFavor:(eachActivity.likes===1?true:false)
+    })))
   }
 
   render() {
@@ -60,8 +72,8 @@ class ActivityTab extends React.Component {
           {isFavor?<span onClick={this.toggleLike}>Dislike</span>:<span onClick={this.toggleLike}>Dislike(Selected)</span>}
           <button onClick={this.onCreateActivity}>Create Activity</button>
         </div>
-        <button onClick={this.props.submitActivity}>Submit Activity</button>
-        <button onClick={this.props.clearChangeInActivity}>Clear Change</button>
+        <button onClick={this.onSubmitActivity}>Submit Activity</button>
+        <button onClick={this.clearChangeInActivity}>Clear Change</button>
       </div>
     );
   }

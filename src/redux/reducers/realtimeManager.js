@@ -5,6 +5,9 @@ import {
     CONNECT_SOCKET_REQUEST,
     CONNECT_SOCKET_SUCCESS,
     CONNECT_SOCKET_FAILURE,
+    SUBMIT_ACTIVITY_REQUEST,
+    SUBMIT_ACTIVITY_SUCCESS,
+    SUBMIT_ACTIVITY_FAILURE,
     OFF_USER,
     NEW_ACTIVITY_LIST
 } from "../actionTypes";
@@ -14,6 +17,8 @@ const initialState = {
     waitingGetModel: false,
     isConnectSocketSuccess: false,
     waitingConnectSocket: false,
+    isSubmitActivitySuccess: false,
+    waitingSubmitActivity: false,
     roomId: "",
     roomname: "",
     restScheduleObj: {},
@@ -154,6 +159,8 @@ export default function (state = initialState, action) {
                 waitingGetModel: false,
                 isConnectSocketSuccess: false,
                 waitingConnectSocket: false,
+                isSubmitActivitySuccess: false,
+                waitingSubmitActivity: false,
                 roomId: "",
                 roomname: "",
                 restScheduleObj: {},
@@ -229,33 +236,27 @@ export default function (state = initialState, action) {
             }
             break;
         }
-        // case CHANGE_MY_ACTIVITY: {
-        //     debugger
-        //     let myself = state.myself
-        //     let {newActivity} = action
-        //     let {content, isFavor} = newActivity
-        //     return {
-        //         ...state,
-        //         myself: {...myself, activity_list: [...myself.activity_list, newActivity]},
-        //         myActivityObj: {...state.myActivityObj, 
-        //             [content]: {content: content, likes: (isFavor?1:0), dislikes:(isFavor?0:1)}}
-        //     };
-        // }
-        // case CLEAR_MY_ACTIVITY: {
-        //     debugger
-        //     let {myself, people, restActivityObj} = state
-        //     let {name} = myself
-        //     for(let person of people) {
-        //         if(person.name === name) {
-        //             return {
-        //                 ...state,
-        //                 myself : {...myself, activity_list: [...person.activity_list]},
-        //                 myActivityObj: {...restActivityObj}
-        //             }
-        //         }
-        //     }
-        //     break;
-        // }
+        case SUBMIT_ACTIVITY_REQUEST: {
+            return {
+                ...state,
+                waitingConnectSocket: true
+            };
+        }
+        case SUBMIT_ACTIVITY_SUCCESS: {
+            return {
+                ...state,
+                isConnectSocketSuccess: true,
+                waitingConnectSocket: false,
+                socketId: action.socketId
+            };
+        }
+        case SUBMIT_ACTIVITY_FAILURE: {
+            return {
+                ...state,
+                isConnectSocketSuccess: false,
+                waitingConnectSocket: false
+            };
+        }
         default:
             return state;
     }
