@@ -26,7 +26,7 @@ class JoinUser extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.props.handleJoinRoomOff}>Close</button> 
+        <button onClick={this.props.handleJoinUserOff}>Close</button> 
         <input className="username"
           onChange={e => this.updateUsername(e.target.value)}
           value={this.state.roomId}

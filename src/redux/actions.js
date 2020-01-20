@@ -18,9 +18,19 @@ import {
   CREATE_USER_FAILURE,
   JOIN_USER_REQUEST,
   JOIN_USER_SUCCESS,
-  JOIN_USER_FAILURE
+  JOIN_USER_FAILURE,
+  GET_MODEL_REQUEST,
+  GET_MODEL_SUCCESS,
+  GET_MODEL_FAILURE,
+  CONNECT_SOCKET_REQUEST,
+  CONNECT_SOCKET_SUCCESS,
+  CONNECT_SOCKET_FAILURE,
+  OFF_USER,
+  CREATE_ACTIVITY,
+  CLEAR_CHANGE_IN_ACTIVITY
 } from "./actionTypes";
 import Axios from "axios";
+import socketio from 'socket.io-client';
 
 let nextTodoId = 0;
 
@@ -74,7 +84,7 @@ export const joinRoom = (form, props) => (dispatch, getState) => {
     (res) => {// process after joining room finished
       debugger
       dispatch({type: JOIN_ROOM_SUCCESS, roomId: form.roomId})
-      alert("JOIN ROOM SUCCESS. now connecting...")
+      alert("JOIN ROOM SUCCESS. now loading...")
       props.history.push(`/rooms/${form.roomId}`)
     },
     (error) => {
@@ -82,6 +92,59 @@ export const joinRoom = (form, props) => (dispatch, getState) => {
       alert("JOIN ROOM FAILURE.")
   })
 };
+
+let processAfterJoinUser = (dispatch, getState) => {
+  let {roomId} = getState().joinRoom
+  let {username} = getState().joinUser
+
+  // process after joining user finished
+  dispatch({type: GET_MODEL_REQUEST})// 모델 불러오기
+  Axios.get(`http://localhost:3000/rooms/${roomId}/model`, {withCredentials: true}).then(
+    (res) => {
+      dispatch({type: GET_MODEL_SUCCESS, model: res.data, username: username})
+    },
+    (error) => {dispatch({type: GET_MODEL_FAILURE, error: error})
+      dispatch()
+      alert("GET MODEL FAILURE. 서버에서 모델을 불러오지 못했습니다.")
+    })
+
+    dispatch({type: CONNECT_SOCKET_REQUEST})
+    const socket = socketio.connect('http://localhost:3000', {
+      query: `roomId=${roomId}&name=${username}`
+  });
+  (() => {
+      socket.emit('chat message', "hi!!!");
+  
+      socket.on('connect', () => {
+        if(socket.connected) {
+          dispatch({type: CONNECT_SOCKET_SUCCESS, socketId:socket.id})
+        }
+        else {
+          dispatch({type: CONNECT_SOCKET_FAILURE})
+        }
+      });
+      socket.on('drop', (msg) => {
+        console.log("drop")
+        socket.disconnect()
+        // model data를 지우는 routine 실행
+      });
+      socket.on('chat message', (msg) => {
+        console.log("chat message: ", msg);
+      });
+      socket.on('new person', (msg) => {
+        console.log("new person: ", msg);
+      });
+      socket.on('delete person', (msg) => {
+        console.log("delete person: ", msg);
+          // msg에는 삭제할 사람의 name이 담겨 있다. 
+          // 모델에서 name에 해당하는 data를 삭제하고,
+          // 만약 자신이 delete person이라면 socket.disconnect를 실행한다.
+      });
+      socket.on('new activity_list', (msg) => {
+        console.log("new activity_list: ", msg);
+      });
+  })();
+}
 
 export const shortcutFromMemory = (props) => (dispatch, getState) => {
   debugger
@@ -95,12 +158,14 @@ export const shortcutFromMemory = (props) => (dispatch, getState) => {
         let roomId = res.data.room_id
         if(res.data.name) {
           let username = res.data.name
-          alert(`DIRECTLY JOINING TO USER : ${username} IN ROOM : ${roomId}`)
+          alert(`JOINING TO USER : ${username} IN ROOM : ${roomId}`)
           dispatch({type: MEMORY_JOIN_USER, username: username, roomId: roomId })
           props.history.push(`/rooms/${roomId}/people/${username}`)
+
+          processAfterJoinUser(dispatch, getState)
         }
         else {
-          alert(`DIRECTLY JOINING TO ROOM : ${roomId}`)
+          if(!getState().joinRoom.isRoomJoinSuccess) {alert(`JOINING TO ROOM : ${roomId}`)}
           dispatch({type: MEMORY_JOIN_ROOM, roomId: roomId })
           props.history.push(`/rooms/${roomId}`)
         }
@@ -125,7 +190,7 @@ export const shortcutFromMemory = (props) => (dispatch, getState) => {
 export const offRoom = (history) => (dispatch, getState) => {// offRoom has reducer in reducers/joinROOM
   Axios.get(`http://localhost:3000/rooms/disconnect`, {withCredentials: true}).then(
     (res) => {// process after joining room finished
-      alert("OFF ROOM SUCCESS. now connecting...")
+      alert("OFF ROOM SUCCESS. now loading...")
       history.push('/')
       dispatch({
         type: OFF_ROOM,
@@ -161,13 +226,49 @@ export const joinUser = (form, props) => (dispatch, getState) => {
   debugger
   let {roomId} = getState().joinRoom
   Axios.get(`http://localhost:3000/rooms/${roomId}/people/${form.username}`, {withCredentials: true}).then(
-    (res) => {// process after joining user finished
+    (res) => {
       dispatch({type: JOIN_USER_SUCCESS, username: form.username})
-      alert("JOIN USER SUCCESS. now connecting...")
+      alert("JOIN USER SUCCESS. now loading...")
       props.history.push(`${props.history.location.pathname}/people/${form.username}`)
+
+      processAfterJoinUser(dispatch, getState)
     },
     (error) => {
       dispatch({type: JOIN_USER_FAILURE, error: error})
       alert("JOIN USER FAILURE. 존재하지 않는 이름입니다.")
     })
+};
+
+export const offUser = (history) => (dispatch, getState) => {// offUser has reducer in reducers/joinUser
+  let {roomId} = getState().joinRoom
+  let {socketId} = getState().realtimeManager
+  Axios.get(`http://localhost:3000/rooms/${roomId}/people/disconnect/?socket_id=${socketId}`, {withCredentials: true}).then(
+    (res) => {// process after joining User finished
+      alert("OFF USER SUCCESS. now loading...")
+
+      // process before going out from the room
+      history.push(`/rooms/${roomId}`)
+      dispatch({
+        type: OFF_USER,
+      })
+    },
+    (error) => {
+    alert("OFF USER FAILED")
+  })
+};
+
+export const createActivity = (content, isFavor) => ({
+  type: CREATE_ACTIVITY,
+  newActivity: {
+    content: content,
+    isFavor: isFavor
+  }
+})
+
+export const submitActivity = () => (dispatch, getState) => {
+};
+
+export const clearChangeInActivity = () => (dispatch, getState) => {
+  let {username} = getState().joinUser
+  dispatch({type: CLEAR_CHANGE_IN_ACTIVITY, username: username})
 };

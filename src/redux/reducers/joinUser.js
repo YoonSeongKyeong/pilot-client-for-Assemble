@@ -1,4 +1,4 @@
-import { JOIN_USER_REQUEST, JOIN_USER_SUCCESS, JOIN_USER_FAILURE, MEMORY_EMPTY, MEMORY_JOIN_ROOM, MEMORY_JOIN_USER, MEMORY_REQUEST } from "../actionTypes";
+import { JOIN_USER_REQUEST, JOIN_USER_SUCCESS, JOIN_USER_FAILURE, MEMORY_EMPTY, MEMORY_JOIN_ROOM, MEMORY_JOIN_USER, MEMORY_REQUEST, OFF_USER } from "../actionTypes";
 
 const initialState = {
     isUserJoinSuccess: false,
@@ -56,6 +56,13 @@ export default function(state = initialState, action) {
         ...state,
         username: null,
         waitingUserJoin: false
+      };
+    }
+    case OFF_USER: {
+      return {
+        ...state,
+        isUserJoinSuccess:false,
+        username: null
       };
     }
     default:

@@ -1,6 +1,6 @@
 import React from 'react';
 // import {Route, Switch} from 'react-router-dom';
-import { Home, Room } from './pages';
+import { Home, Room, Group } from './pages';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 class App extends React.Component {
@@ -11,6 +11,7 @@ class App extends React.Component {
       <div>
         <Router>
           <Switch>
+            <Route path="/rooms/:roomId/people/:username" component={Group} />
             <Route path="/rooms/:roomId" component={Room} />
             <Route path="/" component={Home} />
           </Switch>

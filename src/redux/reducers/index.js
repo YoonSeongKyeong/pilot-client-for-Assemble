@@ -5,5 +5,6 @@ import createRoom from "./createRoom";
 import joinRoom from "./joinRoom";
 import createUser from "./createUser";
 import joinUser from "./joinUser";
+import realtimeManager from "./realtimeManager";
 
-export default combineReducers({ todos, visibilityFilter, createRoom, joinRoom, createUser, joinUser});
+export default combineReducers({ todos, visibilityFilter, createRoom, joinRoom, createUser, joinUser, realtimeManager});
