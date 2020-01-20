@@ -1,7 +1,4 @@
 import {
-  ADD_TODO,
-  TOGGLE_TODO,
-  SET_FILTER,
   CREATE_ROOM_REQUEST,
   CREATE_ROOM_SUCCESS,
   CREATE_ROOM_FAILURE,
@@ -46,30 +43,6 @@ import {
 } from "./actionTypes";
 import Axios from "axios";
 import socketio from 'socket.io-client';
-
-let nextTodoId = 0;
-
-export const addTodo = content => ({
-  type: ADD_TODO,
-  payload: {
-    id: ++nextTodoId,
-    content
-  }
-});
-
-export const toggleTodo = id => ({
-  type: TOGGLE_TODO,
-  payload: {
-    id
-  }
-});
-
-export const setFilter = filter => ({
-  type: SET_FILTER,
-  payload: {
-    filter
-  }
-});
 
 export const createRoom = form => (dispatch, getState) => {
   dispatch({
