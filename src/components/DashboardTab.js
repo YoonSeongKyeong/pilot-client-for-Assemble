@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import ScheduleList from "./ScheduleList";
+import PlaceList from "./PlaceList";
 import ActivityList from "./ActivityList";
 import MenuList from "./MenuList";
 
@@ -12,7 +13,7 @@ class DashboardTab extends React.Component {
   }
 
   render() {
-    let {restScheduleObj, myScheduleObj, restActivityObj, myActivityObj, restMenuObj, myMenuObj} = this.props.realtimeManager
+    let {restScheduleObj, myScheduleObj, restPlaceObj, myPlaceObj, restActivityObj, myActivityObj, restMenuObj, myMenuObj} = this.props.realtimeManager
     debugger
     return (
         <div>
@@ -20,6 +21,8 @@ class DashboardTab extends React.Component {
             <div>
               <div>Schedule Top 5</div>
               <ScheduleList restScheduleObj={restScheduleObj} myScheduleObj={myScheduleObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
+              <div>Place Top 5</div>
+              <PlaceList restPlaceObj={restPlaceObj} myPlaceObj={myPlaceObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
               <div>Activity Top 5</div>
               <ActivityList restActivityObj={restActivityObj} myActivityObj={myActivityObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
               <div>Menu Top 5</div>

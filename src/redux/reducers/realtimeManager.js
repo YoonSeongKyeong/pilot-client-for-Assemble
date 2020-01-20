@@ -11,6 +11,10 @@ import {
     SUBMIT_SCHEDULE_REQUEST,
     SUBMIT_SCHEDULE_SUCCESS,
     SUBMIT_SCHEDULE_FAILURE,
+    NEW_PLACE_LIST,
+    SUBMIT_PLACE_REQUEST,
+    SUBMIT_PLACE_SUCCESS,
+    SUBMIT_PLACE_FAILURE,
     NEW_ACTIVITY_LIST,
     SUBMIT_ACTIVITY_REQUEST,
     SUBMIT_ACTIVITY_SUCCESS,
@@ -28,6 +32,8 @@ const initialState = {
     waitingConnectSocket: false,
     isSubmitScheduleSuccess: false,
     waitingSubmitSchedule: false,
+    isSubmitPlaceSuccess: false,
+    waitingSubmitPlace: false,
     isSubmitActivitySuccess: false,
     waitingSubmitActivity: false,
     isSubmitMenuSuccess: false,
@@ -174,6 +180,8 @@ export default function (state = initialState, action) {
                 waitingConnectSocket: false,
                 isSubmitScheduleSuccess: false,
                 waitingSubmitSchedule: false,
+                isSubmitPlaceSuccess: false,
+                waitingSubmitPlace: false,
                 isSubmitActivitySuccess: false,
                 waitingSubmitActivity: false,
                 isSubmitMenuSuccess: false,
@@ -269,6 +277,83 @@ export default function (state = initialState, action) {
                             people: people.map(p => {
                                 if(p.name === updaterName) {
                                     return {...p, avail_schedules_list : avail_schedules_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                }
+            }
+            break;
+        }
+        case SUBMIT_PLACE_REQUEST: {
+            return {
+                ...state,
+                waitingSubmitPlace: true
+            };
+        }
+        case SUBMIT_PLACE_SUCCESS: {
+            return {
+                ...state,
+                isSubmitPlaceSuccess: true,
+                waitingSubmitPlace: false,
+                socketId: action.socketId
+            };
+        }
+        case SUBMIT_PLACE_FAILURE: {
+            return {
+                ...state,
+                isSubmitPlaceSuccess: false,
+                waitingSubmitPlace: false
+            };
+        }
+        case NEW_PLACE_LIST: {
+            debugger
+            let {myself, people, restPlaceObj} = state
+            let {updaterName, avail_places_list} = action
+            for(let person of people) {
+                if (person.name === updaterName) {
+                    if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 avail_places_list를 덮어쓴다.
+                        let myPlaceObj = {}
+                        for(let eachPlace of avail_places_list) {
+                            let {content} = eachPlace
+                            myPlaceObj[content] = { content: content, likes: 1}
+                        }
+                        return {
+                            ...state,
+                            myself: {...myself, avail_places_list: avail_places_list},
+                            myPlaceObj: myPlaceObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, avail_places_list : avail_places_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                    else {// oldPlaceList를 갖고와서 restObj에서 빼고, restObj에 newPlaceList를 더한다. 이후 person의 avail_places_list를 덮어쓴다.
+                        let oldPlaceList = person.avail_places_list
+                        restPlaceObj = {...restPlaceObj}
+                        for(let oldPlace of oldPlaceList) {
+                            let {content} = oldPlace
+                            let targetObj = restPlaceObj[content]
+                            restPlaceObj[content] = { content: content, likes: targetObj.likes-1 }
+                        }
+                        for(let newPlace of avail_places_list) {
+                            let {content} = newPlace
+                            let targetObj = restPlaceObj[content]
+                            if(targetObj!==undefined) {
+                                restPlaceObj[content] = { content: content, likes: targetObj.likes+1 }
+                            } else {
+                                restPlaceObj[content] = { content: content, likes: 1 }
+                            }
+                        }
+                        return {
+                            ...state,
+                            restPlaceObj: restPlaceObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, avail_places_list : avail_places_list}
                                 } 
                                 return p
                             })

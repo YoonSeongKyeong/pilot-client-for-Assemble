@@ -31,6 +31,10 @@ import {
   SUBMIT_SCHEDULE_REQUEST,
   SUBMIT_SCHEDULE_SUCCESS,
   SUBMIT_SCHEDULE_FAILURE,
+  NEW_PLACE_LIST,
+  SUBMIT_PLACE_REQUEST,
+  SUBMIT_PLACE_SUCCESS,
+  SUBMIT_PLACE_FAILURE,
   NEW_ACTIVITY_LIST,
   SUBMIT_ACTIVITY_REQUEST,
   SUBMIT_ACTIVITY_SUCCESS,
@@ -154,6 +158,9 @@ let processAfterJoinUser = (dispatch, getState) => {
       socket.on('new schedule_list', ({name, avail_schedules_list}) => {
         dispatch({ type: NEW_SCHEDULE_LIST, updaterName: name, avail_schedules_list: avail_schedules_list })
       });
+      socket.on('new place_list', ({name, avail_places_list}) => {
+        dispatch({ type: NEW_PLACE_LIST, updaterName: name, avail_places_list: avail_places_list })
+      });
       socket.on('new activity_list', ({name, activity_list}) => {
         dispatch({ type: NEW_ACTIVITY_LIST, updaterName: name, activity_list: activity_list })
       });
@@ -274,6 +281,44 @@ export const offUser = (history) => (dispatch, getState) => {// offUser has redu
   })
 };
 
+export const submitSchedule = (avail_schedules_list) => (dispatch, getState) => {
+  dispatch({
+    type: SUBMIT_SCHEDULE_REQUEST,
+  })
+  debugger
+  let {roomId, myself:{name}} = getState().realtimeManager
+  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/avail_schedules_list`, {
+    avail_schedules_list: avail_schedules_list
+  }).then(
+    (res) => {
+      dispatch({type: SUBMIT_SCHEDULE_SUCCESS})
+      alert("POST SCHEDULE SUCCESS.")
+    },
+    (error) => {
+      dispatch({type: SUBMIT_SCHEDULE_FAILURE, error: error})
+      alert("POST SCHEDULE FAILURE.")
+    })
+};
+
+export const submitPlace = (avail_places_list) => (dispatch, getState) => {
+  dispatch({
+    type: SUBMIT_PLACE_REQUEST,
+  })
+  debugger
+  let {roomId, myself:{name}} = getState().realtimeManager
+  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/avail_places_list`, {
+    avail_places_list: avail_places_list
+  }).then(
+    (res) => {
+      dispatch({type: SUBMIT_PLACE_SUCCESS})
+      alert("POST PLACE SUCCESS.")
+    },
+    (error) => {
+      dispatch({type: SUBMIT_PLACE_FAILURE, error: error})
+      alert("POST PLACE FAILURE.")
+    })
+};
+
 export const submitActivity = (activity_list) => (dispatch, getState) => {
   dispatch({
     type: SUBMIT_ACTIVITY_REQUEST,
@@ -310,21 +355,4 @@ export const submitMenu = (menu_list) => (dispatch, getState) => {
     })
 };
 
-export const submitSchedule = (avail_schedules_list) => (dispatch, getState) => {
-  dispatch({
-    type: SUBMIT_SCHEDULE_REQUEST,
-  })
-  debugger
-  let {roomId, myself:{name}} = getState().realtimeManager
-  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/avail_schedules_list`, {
-    avail_schedules_list: avail_schedules_list
-  }).then(
-    (res) => {
-      dispatch({type: SUBMIT_SCHEDULE_SUCCESS})
-      alert("POST SCHEDULE SUCCESS.")
-    },
-    (error) => {
-      dispatch({type: SUBMIT_SCHEDULE_FAILURE, error: error})
-      alert("POST SCHEDULE FAILURE.")
-    })
-};
+
