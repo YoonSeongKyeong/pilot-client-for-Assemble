@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import ActivityRow from "./ActivityRow";
+import ActivityList from "./ActivityList";
 
 class DashboardTab extends React.Component {
   constructor(props) {
@@ -9,19 +9,14 @@ class DashboardTab extends React.Component {
     };
   }
 
-  activitySummary = () => {
-    return Object.values(this.props.realtimeManager.groupActivityObj)
-    .sort((a, b) => (b.likes - a.likes) - 3*(b.dislikes - a.dislikes) ) // 정렬 logic : 싫어하는 것은 좋아하는 것보다 페널티가 높게 설정
-    .slice(0, 5)
-    .map(eachActivity => <ActivityRow info={eachActivity} key={eachActivity.content}/>)
-  }
-
   render() {
+    let {restActivityObj, myActivityObj} = this.props.realtimeManager
+    debugger
     return (
         <div>
             대시보드
             <div>
-                {this.activitySummary()}
+              <ActivityList restActivityObj={restActivityObj} myActivityObj={myActivityObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
             </div>
         </div>
     );
@@ -31,5 +26,5 @@ const mapStateToProps = state => {
     return { realtimeManager: state.realtimeManager };
   };
 export default connect(
-    mapStateToProps,
+    mapStateToProps
 )(DashboardTab);

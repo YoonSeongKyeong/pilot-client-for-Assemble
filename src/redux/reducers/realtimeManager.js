@@ -6,8 +6,7 @@ import {
     CONNECT_SOCKET_SUCCESS,
     CONNECT_SOCKET_FAILURE,
     OFF_USER,
-    CREATE_ACTIVITY,
-    CLEAR_CHANGE_IN_ACTIVITY
+    NEW_ACTIVITY_LIST
 } from "../actionTypes";
 
 const initialState = {
@@ -17,16 +16,15 @@ const initialState = {
     waitingConnectSocket: false,
     roomId: "",
     roomname: "",
-    groupScheduleObj: {},
-    localScheduleObj: {},
-    groupPlaceObj: {},
-    localPlaceObj: {},
-    groupActivityObj: {},
-    localActivityObj: {},
-    groupMenuObj: {},
-    localMenuObj: {},
+    restScheduleObj: {},
+    myScheduleObj: {},
+    restPlaceObj: {},
+    myPlaceObj: {},
+    restActivityObj: {},
+    myActivityObj: {},
+    restMenuObj: {},
+    myMenuObj: {},
     paymentList: [],
-    localPaymentList: [],
     people: [],
     myself: {},
     chats: [],
@@ -45,36 +43,60 @@ export default function (state = initialState, action) {
             debugger
             let {room_id, roomname, people, chats, payment_list } = action.model
             let username = action.username
-            let scheduleObj = {}
-            let placeObj = {}
-            let activityObj = {}
-            let menuObj = {}
+            let restScheduleObj = {}
+            let myScheduleObj = {}
+            let restPlaceObj = {}
+            let myPlaceObj = {}
+            let restActivityObj = {}
+            let myActivityObj = {}
+            let restMenuObj = {}
+            let myMenuObj = {}
             let myself
-            for (let eachPerson of people) {// make group level object
-                if(eachPerson.name === username) {
+            for (let eachPerson of people) {// make high level object
+                if(eachPerson.name === username) {// make model for self
                     myself = {...eachPerson}
+                    for(let eachSchedule of eachPerson.avail_schedules_list) {
+                        let {content} = eachSchedule
+                        myScheduleObj[content] = { content: content, likes: 1 } }
+                    for(let eachPlace of eachPerson.avail_places_list) {
+                        let {content} = eachPlace
+                        myPlaceObj[content] = { content: content, likes: 1 } }
+                    for(let eachActivity of eachPerson.activity_list) {
+                        let {content, isFavor} = eachActivity
+                        myActivityObj[content] = { content: content, likes: 0, dislikes:0 }
+                        if (isFavor === true ) { myActivityObj[content].likes += 1 }
+                        else if (isFavor === false ) { myActivityObj[content].dislikes += 1 }
+                    }
+                    for(let eachMenu of eachPerson.menu_list) {
+                        let {content, isFavor} = eachMenu
+                        myMenuObj[content] = { content: content, likes: 0, dislikes:0 }
+                        if (isFavor === true ) { myMenuObj[content].likes += 1 }
+                        else if (isFavor === false ) { myMenuObj[content].dislikes += 1 }
+                    }
                 }
-                for(let eachSchedule of eachPerson.avail_schedules_list) {
-                    let {content} = eachSchedule
-                    if( scheduleObj[content] === undefined ) { scheduleObj[content] = { content: content, likes: 1 } }
-                    else { scheduleObj[content].likes +=  1 }
-                }
-                for(let eachPlace of eachPerson.avail_places_list) {
-                    let {content} = eachPlace
-                    if( placeObj[content] === undefined ) { placeObj[content] = { content: content, likes: 1 } }
-                    else { placeObj[content].likes +=  1 }
-                }
-                for(let eachActivity of eachPerson.activity_list) {
-                    let {content, isFavor} = eachActivity
-                    if( activityObj[content] === undefined ) { activityObj[content] = { content: content, likes: 0, dislikes:0 } }
-                    if (isFavor === true ) { activityObj[content].likes += 1 }
-                    else if (isFavor === false ) { activityObj[content].dislikes += 1 }
-                }
-                for(let eachMenu of eachPerson.menu_list) {
-                    let {content, isFavor} = eachMenu
-                    if( menuObj[content] === undefined ) { menuObj[content] = { content: content, likes: 0, dislikes:0 } }
-                    if (isFavor === true ) { menuObj[content].likes += 1 }
-                    else if (isFavor === false ) { menuObj[content].dislikes += 1 }
+                else {// make model for rest
+                    for(let eachSchedule of eachPerson.avail_schedules_list) {
+                        let {content} = eachSchedule
+                        if( restScheduleObj[content] === undefined ) { restScheduleObj[content] = { content: content, likes: 1 } }
+                        else { restScheduleObj[content].likes +=  1 }
+                    }
+                    for(let eachPlace of eachPerson.avail_places_list) {
+                        let {content} = eachPlace
+                        if( restPlaceObj[content] === undefined ) { restPlaceObj[content] = { content: content, likes: 1 } }
+                        else { restPlaceObj[content].likes +=  1 }
+                    }
+                    for(let eachActivity of eachPerson.activity_list) {
+                        let {content, isFavor} = eachActivity
+                        if( restActivityObj[content] === undefined ) { restActivityObj[content] = { content: content, likes: 0, dislikes:0 } }
+                        if (isFavor === true ) { restActivityObj[content].likes += 1 }
+                        else if (isFavor === false ) { restActivityObj[content].dislikes += 1 }
+                    }
+                    for(let eachMenu of eachPerson.menu_list) {
+                        let {content, isFavor} = eachMenu
+                        if( restMenuObj[content] === undefined ) { restMenuObj[content] = { content: content, likes: 0, dislikes:0 } }
+                        if (isFavor === true ) { restMenuObj[content].likes += 1 }
+                        else if (isFavor === false ) { restMenuObj[content].dislikes += 1 }
+                    }
                 }
             }
             return {
@@ -87,15 +109,14 @@ export default function (state = initialState, action) {
                 myself: myself,
                 chats: chats,
                 paymentList: [...payment_list],
-                localPaymentList: [...payment_list],
-                groupScheduleObj: {...scheduleObj},
-                localScheduleObj: {...scheduleObj},
-                groupPlaceObj: {...placeObj},
-                localPlaceObj: {...placeObj},
-                groupActivityObj: {...activityObj},
-                localActivityObj: {...activityObj},
-                groupMenuObj: {...menuObj},
-                localMenuObj: {...menuObj}
+                restScheduleObj: {...restScheduleObj},
+                myScheduleObj: {...myScheduleObj},
+                restPlaceObj: {...restPlaceObj},
+                myPlaceObj: {...myPlaceObj},
+                restActivityObj: {...restActivityObj},
+                myActivityObj: {...myActivityObj},
+                restMenuObj: {...restMenuObj},
+                myMenuObj: {...myMenuObj}
             };
         }
         case GET_MODEL_FAILURE: {
@@ -135,47 +156,106 @@ export default function (state = initialState, action) {
                 waitingConnectSocket: false,
                 roomId: "",
                 roomname: "",
-                groupScheduleList: [],
-                groupPlaceList: [],
-                groupActivityList: [],
-                groupMenuList: [],
+                restScheduleObj: {},
+                myScheduleObj: {},
+                restPlaceObj: {},
+                myPlaceObj: {},
+                restActivityObj: {},
+                myActivityObj: {},
+                restMenuObj: {},
+                myMenuObj: {},
                 paymentList: [],
                 people: [],
                 myself: {},
                 chats: [],
-                socketId: null
+                socketId:null
             };
-          }
-        case CREATE_ACTIVITY: {
+        }
+        case NEW_ACTIVITY_LIST: {
             debugger
-            let myself = state.myself
-            let {newActivity} = action
-            let {content, isFavor} = newActivity
-            return {
-                ...state,
-                myself: {...myself, activity_list: [...myself.activity_list, newActivity]},
-                localActivityObj: {...state.localActivityObj, 
-                    [content]: {content: content, likes: (isFavor?1:0), dislikes:(isFavor?0:1)}}
-            };
+            let {myself, people, restActivityObj} = state
+            let {updaterName, activity_list} = action
+            for(let person of people) {
+                if (person.name === updaterName) {
+                    if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 activity_list를 덮어쓴다.
+                        let myActivityObj = {}
+                        for(let eachActivity of activity_list) {
+                            let {content, isFavor} = eachActivity
+                            myActivityObj[content] = { content: content, likes: 0, dislikes:0 }
+                            if (isFavor === true ) { myActivityObj[content].likes += 1 }
+                            else if (isFavor === false ) { myActivityObj[content].dislikes += 1 }
+                        }
+                        return {
+                            ...state,
+                            myself: {...myself, activity_list: activity_list},
+                            myActivityObj: myActivityObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, activity_list : activity_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                    else {// oldActivityList를 갖고와서 restObj에서 빼고, restObj에 newActivityList를 더한다. 이후 person의 activity_list를 덮어쓴다.
+                        let oldActivityList = person.activity_list
+                        restActivityObj = {...restActivityObj}
+                        for(let oldActivity of oldActivityList) {
+                            let {content, isFavor} = oldActivity
+                            let targetObj = restActivityObj[content]
+                            restActivityObj[content] = { content: content, likes: targetObj.likes-(isFavor?1:0), dislikes: targetObj.dislikes-(isFavor?0:1)}
+                        }
+                        for(let newActivity of activity_list) {
+                            let {content, isFavor} = newActivity
+                            let targetObj = restActivityObj[content]
+                            if(targetObj!==undefined) {
+                                restActivityObj[content] = { content: content, likes: targetObj.likes+(isFavor?1:0), dislikes: targetObj.dislikes+(isFavor?0:1)}
+                            } else {
+                                restActivityObj[content] = { content: content, likes: (isFavor?1:0), dislikes: (isFavor?0:1)}
+                            }
+                        }
+                        return {
+                            ...state,
+                            restActivityObj: restActivityObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, activity_list : activity_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                }
+            }
+            break;
         }
-        case CLEAR_CHANGE_IN_ACTIVITY: {
-            // debugger
-            // let {username} = action
-            // for(let person of state.people) {
-            //     if(person.name === username) {
-            //         return {
-            //             ...state,
-
-            //         }
-            //     }
-            // }
-            // return {
-            //     ...state,
-            //     myself: {...myself, activity_list: [...myself.activity_list, newActivity]},
-            //     localActivityObj: {...state.localActivityObj, 
-            //         [content]: {content: content, likes: (isFavor?1:0), dislikes:(isFavor?0:1)}}
-            // };
-        }
+        // case CHANGE_MY_ACTIVITY: {
+        //     debugger
+        //     let myself = state.myself
+        //     let {newActivity} = action
+        //     let {content, isFavor} = newActivity
+        //     return {
+        //         ...state,
+        //         myself: {...myself, activity_list: [...myself.activity_list, newActivity]},
+        //         myActivityObj: {...state.myActivityObj, 
+        //             [content]: {content: content, likes: (isFavor?1:0), dislikes:(isFavor?0:1)}}
+        //     };
+        // }
+        // case CLEAR_MY_ACTIVITY: {
+        //     debugger
+        //     let {myself, people, restActivityObj} = state
+        //     let {name} = myself
+        //     for(let person of people) {
+        //         if(person.name === name) {
+        //             return {
+        //                 ...state,
+        //                 myself : {...myself, activity_list: [...person.activity_list]},
+        //                 myActivityObj: {...restActivityObj}
+        //             }
+        //         }
+        //     }
+        //     break;
+        // }
         default:
             return state;
     }

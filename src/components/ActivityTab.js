@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import ActivityRow from "./ActivityRow";
-import { submitActivity, createActivity, clearChangeInActivity } from "../redux/actions";
+import { submitActivity } from "../redux/actions";
+import ActivityList from "./ActivityList";
 
 class ActivityTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activityList:[],
+      myActivityObj: props.realtimeManager.myActivityObj,
       createInput:"",
       isFavor:true
     };
@@ -18,18 +18,23 @@ class ActivityTab extends React.Component {
   }
 
   onCreateActivity = () => {
-    debugger
-    let {createInput, isFavor} = this.state
-    if(this.props.realtimeManager.localActivityObj[createInput] === undefined) {
-      this.props.createActivity(createInput, isFavor)
+    let {createInput, isFavor, myActivityObj} = this.state
+    if(this.props.realtimeManager.restActivityObj[createInput] === undefined
+      && myActivityObj[createInput] === undefined) {
+      this.setState({createInput:"", isFavor:true, myActivityObj:{...myActivityObj, [createInput]: {content: createInput, likes: (isFavor?1:0), dislikes: (isFavor?0:1)}}})
     }
-    this.setState({createInput:"", isFavor:true})
   }
 
-  activities = () => {
-    return Object.values(this.props.realtimeManager.localActivityObj)
-    .sort((a, b) => (b.likes - a.likes) - 3*(b.dislikes - a.dislikes) ) // 정렬 logic : 싫어하는 것은 좋아하는 것보다 페널티가 높게 설정
-    .map(eachActivity => <ActivityRow info={eachActivity} key={eachActivity.content}/>)
+  onDeleteSelection = (content) => {
+    let newObj = {...this.state.myActivityObj}
+    newObj[content] = undefined
+    this.setState({myActivityObj: newObj})
+  }
+
+  onLikeSelection = (content, isLike) => {// handle like or dislike selection
+    let newObj = {...this.state.myActivityObj}
+    newObj[content] = {...newObj[content], content:content, likes: (isLike?1:0), dislikes: (isLike?0:1)}
+    this.setState({myActivityObj: newObj})
   }
 
   toggleLike = () => {
@@ -37,12 +42,14 @@ class ActivityTab extends React.Component {
   }
 
   render() {
-    let {createInput, isFavor} = this.state
+    let {createInput, isFavor, myActivityObj} = this.state
+    let {restActivityObj} = this.props.realtimeManager
     return (
       <div>
         활동
         <div>
-          {this.activities()}
+          <ActivityList restActivityObj={restActivityObj} myActivityObj={myActivityObj} isSummary={false}
+           onDeleteSelection={this.onDeleteSelection} onLikeSelection = {this.onLikeSelection}/>
         </div>
         <div>추가
           <input className="create-input"
@@ -64,5 +71,5 @@ const mapStateToProps = state => {
 };
 export default connect(
   mapStateToProps,
-  { submitActivity, createActivity, clearChangeInActivity }
+  { submitActivity }
 )(ActivityTab);

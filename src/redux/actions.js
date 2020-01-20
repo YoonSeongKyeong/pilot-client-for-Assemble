@@ -26,8 +26,7 @@ import {
   CONNECT_SOCKET_SUCCESS,
   CONNECT_SOCKET_FAILURE,
   OFF_USER,
-  CREATE_ACTIVITY,
-  CLEAR_CHANGE_IN_ACTIVITY
+  NEW_ACTIVITY_LIST
 } from "./actionTypes";
 import Axios from "axios";
 import socketio from 'socket.io-client';
@@ -140,8 +139,8 @@ let processAfterJoinUser = (dispatch, getState) => {
           // 모델에서 name에 해당하는 data를 삭제하고,
           // 만약 자신이 delete person이라면 socket.disconnect를 실행한다.
       });
-      socket.on('new activity_list', (msg) => {
-        console.log("new activity_list: ", msg);
+      socket.on('new activity_list', ({name, activity_list}) => {
+        dispatch({ type: NEW_ACTIVITY_LIST, updaterName: name, activity_list: activity_list })
       });
   })();
 }
@@ -257,18 +256,15 @@ export const offUser = (history) => (dispatch, getState) => {// offUser has redu
   })
 };
 
-export const createActivity = (content, isFavor) => ({
-  type: CREATE_ACTIVITY,
-  newActivity: {
-    content: content,
-    isFavor: isFavor
-  }
-})
+// export const createActivity = (content, isFavor) => ({
+//   type: CREATE_ACTIVITY,
+//   newActivity: {
+//     content: content,
+//     isFavor: isFavor
+//   }
+// })
 
 export const submitActivity = () => (dispatch, getState) => {
 };
 
-export const clearChangeInActivity = () => (dispatch, getState) => {
-  let {username} = getState().joinUser
-  dispatch({type: CLEAR_CHANGE_IN_ACTIVITY, username: username})
-};
+// export const clearChangeInActivity = () => ({type: CLEAR_CHANGE_IN_ACTIVITY});
