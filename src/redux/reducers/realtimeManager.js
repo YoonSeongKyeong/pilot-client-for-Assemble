@@ -5,11 +5,16 @@ import {
     CONNECT_SOCKET_REQUEST,
     CONNECT_SOCKET_SUCCESS,
     CONNECT_SOCKET_FAILURE,
+    OFF_USER,
+    NEW_PERSON,
+    NEW_SCHEDULE_LIST,
+    SUBMIT_SCHEDULE_REQUEST,
+    SUBMIT_SCHEDULE_SUCCESS,
+    SUBMIT_SCHEDULE_FAILURE,
+    NEW_ACTIVITY_LIST,
     SUBMIT_ACTIVITY_REQUEST,
     SUBMIT_ACTIVITY_SUCCESS,
     SUBMIT_ACTIVITY_FAILURE,
-    OFF_USER,
-    NEW_ACTIVITY_LIST,
     NEW_MENU_LIST,
     SUBMIT_MENU_REQUEST,
     SUBMIT_MENU_SUCCESS,
@@ -21,6 +26,8 @@ const initialState = {
     waitingGetModel: false,
     isConnectSocketSuccess: false,
     waitingConnectSocket: false,
+    isSubmitScheduleSuccess: false,
+    waitingSubmitSchedule: false,
     isSubmitActivitySuccess: false,
     waitingSubmitActivity: false,
     isSubmitMenuSuccess: false,
@@ -165,6 +172,8 @@ export default function (state = initialState, action) {
                 waitingGetModel: false,
                 isConnectSocketSuccess: false,
                 waitingConnectSocket: false,
+                isSubmitScheduleSuccess: false,
+                waitingSubmitSchedule: false,
                 isSubmitActivitySuccess: false,
                 waitingSubmitActivity: false,
                 isSubmitMenuSuccess: false,
@@ -185,6 +194,89 @@ export default function (state = initialState, action) {
                 chats: [],
                 socketId:null
             };
+        }
+        case NEW_PERSON: {
+            return {
+                ...state,
+                people: [...state.people, action.newPerson]
+            };
+        }
+        case SUBMIT_SCHEDULE_REQUEST: {
+            return {
+                ...state,
+                waitingSubmitSchedule: true
+            };
+        }
+        case SUBMIT_SCHEDULE_SUCCESS: {
+            return {
+                ...state,
+                isSubmitScheduleSuccess: true,
+                waitingSubmitSchedule: false,
+                socketId: action.socketId
+            };
+        }
+        case SUBMIT_SCHEDULE_FAILURE: {
+            return {
+                ...state,
+                isSubmitScheduleSuccess: false,
+                waitingSubmitSchedule: false
+            };
+        }
+        case NEW_SCHEDULE_LIST: {
+            debugger
+            let {myself, people, restScheduleObj} = state
+            let {updaterName, avail_schedules_list} = action
+            for(let person of people) {
+                if (person.name === updaterName) {
+                    if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 avail_schedules_list를 덮어쓴다.
+                        let myScheduleObj = {}
+                        for(let eachSchedule of avail_schedules_list) {
+                            let {content} = eachSchedule
+                            myScheduleObj[content] = { content: content, likes: 1}
+                        }
+                        return {
+                            ...state,
+                            myself: {...myself, avail_schedules_list: avail_schedules_list},
+                            myScheduleObj: myScheduleObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, avail_schedules_list : avail_schedules_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                    else {// oldScheduleList를 갖고와서 restObj에서 빼고, restObj에 newScheduleList를 더한다. 이후 person의 avail_schedules_list를 덮어쓴다.
+                        let oldScheduleList = person.avail_schedules_list
+                        restScheduleObj = {...restScheduleObj}
+                        for(let oldSchedule of oldScheduleList) {
+                            let {content} = oldSchedule
+                            let targetObj = restScheduleObj[content]
+                            restScheduleObj[content] = { content: content, likes: targetObj.likes-1 }
+                        }
+                        for(let newSchedule of avail_schedules_list) {
+                            let {content} = newSchedule
+                            let targetObj = restScheduleObj[content]
+                            if(targetObj!==undefined) {
+                                restScheduleObj[content] = { content: content, likes: targetObj.likes+1 }
+                            } else {
+                                restScheduleObj[content] = { content: content, likes: 1 }
+                            }
+                        }
+                        return {
+                            ...state,
+                            restScheduleObj: restScheduleObj,
+                            people: people.map(p => {
+                                if(p.name === updaterName) {
+                                    return {...p, avail_schedules_list : avail_schedules_list}
+                                } 
+                                return p
+                            })
+                        }
+                    }
+                }
+            }
+            break;
         }
         case NEW_ACTIVITY_LIST: {
             debugger

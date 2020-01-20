@@ -9,6 +9,7 @@ import {
   JOIN_ROOM_SUCCESS,
   JOIN_ROOM_FAILURE,
   OFF_ROOM,
+  NEW_PERSON,
   MEMORY_REQUEST,
   MEMORY_JOIN_ROOM,
   MEMORY_JOIN_USER,
@@ -26,6 +27,10 @@ import {
   CONNECT_SOCKET_SUCCESS,
   CONNECT_SOCKET_FAILURE,
   OFF_USER,
+  NEW_SCHEDULE_LIST,
+  SUBMIT_SCHEDULE_REQUEST,
+  SUBMIT_SCHEDULE_SUCCESS,
+  SUBMIT_SCHEDULE_FAILURE,
   NEW_ACTIVITY_LIST,
   SUBMIT_ACTIVITY_REQUEST,
   SUBMIT_ACTIVITY_SUCCESS,
@@ -137,15 +142,17 @@ let processAfterJoinUser = (dispatch, getState) => {
       socket.on('chat message', (msg) => {
         console.log("chat message: ", msg);
       });
-      socket.on('new person', (msg) => {
-        console.log("new person: ", msg);
-          // 새 person이 들어왔을 때의 로직
+      socket.on('new person', (newPerson) => {// 새 person이 들어왔을 때의 로직
+        dispatch({ type: NEW_PERSON, newPerson: newPerson })
       });
       socket.on('delete person', (msg) => {
         console.log("delete person: ", msg);
           // msg에는 삭제할 사람의 name이 담겨 있다. 
           // 모델에서 name에 해당하는 data를 삭제하고,
           // 만약 자신이 delete person이라면 socket.disconnect를 실행한다.
+      });
+      socket.on('new schedule_list', ({name, avail_schedules_list}) => {
+        dispatch({ type: NEW_SCHEDULE_LIST, updaterName: name, avail_schedules_list: avail_schedules_list })
       });
       socket.on('new activity_list', ({name, activity_list}) => {
         dispatch({ type: NEW_ACTIVITY_LIST, updaterName: name, activity_list: activity_list })
@@ -300,5 +307,24 @@ export const submitMenu = (menu_list) => (dispatch, getState) => {
     (error) => {
       dispatch({type: SUBMIT_MENU_FAILURE, error: error})
       alert("POST MENU FAILURE.")
+    })
+};
+
+export const submitSchedule = (avail_schedules_list) => (dispatch, getState) => {
+  dispatch({
+    type: SUBMIT_SCHEDULE_REQUEST,
+  })
+  debugger
+  let {roomId, myself:{name}} = getState().realtimeManager
+  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/avail_schedules_list`, {
+    avail_schedules_list: avail_schedules_list
+  }).then(
+    (res) => {
+      dispatch({type: SUBMIT_SCHEDULE_SUCCESS})
+      alert("POST SCHEDULE SUCCESS.")
+    },
+    (error) => {
+      dispatch({type: SUBMIT_SCHEDULE_FAILURE, error: error})
+      alert("POST SCHEDULE FAILURE.")
     })
 };
