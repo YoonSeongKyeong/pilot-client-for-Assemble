@@ -1,5 +1,5 @@
 import React from "react";
-import ScheduleRow from "./ScheduleRow";
+import ScheduleRow from "../antDesignComponents/ScheduleRow";
 
 const ScheduleList = ({ restScheduleObj, myScheduleObj, isSummary, onDeleteSelection, onLikeSelection } ) => {// restScheduleObj와 myScheduleOBj를 갖고 ScheduleList를 생성한다.
     let copiedMyScheduleObj = {...myScheduleObj}
@@ -25,7 +25,7 @@ const ScheduleList = ({ restScheduleObj, myScheduleObj, isSummary, onDeleteSelec
         })
         let midResult=([...sharedArr, ...unsharedArr]).sort((a, b) => (b.likes - a.likes)) // 정렬 logic : 가능한 많이 겹치는 일정이 먼저 오도록 정렬
         if(isSummary) {
-            midResult=midResult.slice(0,5)
+            midResult=midResult.slice(0,3)
         }
         return midResult.map(eachSchedule => 
         <ScheduleRow info={eachSchedule} key={eachSchedule.content} onDeleteSelection={onDeleteSelection} onLikeSelection={onLikeSelection}/>)

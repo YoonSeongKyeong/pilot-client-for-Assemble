@@ -62,7 +62,7 @@ export const createRoom = form => (dispatch, getState) => {
     })
 };
 
-export const joinRoom = (form, props) => (dispatch, getState) => {
+export const joinRoom = (form, history) => (dispatch, getState) => {
   dispatch({
     type: JOIN_ROOM_REQUEST,
   })
@@ -73,7 +73,7 @@ export const joinRoom = (form, props) => (dispatch, getState) => {
       debugger
       dispatch({type: JOIN_ROOM_SUCCESS, roomId: form.roomId})
       alert("JOIN ROOM SUCCESS. now loading...")
-      props.history.push(`/rooms/${form.roomId}`)
+      history.push(`/rooms/${form.roomId}`)
     },
     (error) => {
       dispatch({type: JOIN_ROOM_FAILURE, error})
@@ -216,7 +216,7 @@ export const createUser = form => (dispatch, getState) => {
   
 };
 
-export const joinUser = (form, props) => (dispatch, getState) => {
+export const joinUser = (form, history) => (dispatch, getState) => {
   dispatch({
     type: JOIN_USER_REQUEST,
   })
@@ -226,7 +226,7 @@ export const joinUser = (form, props) => (dispatch, getState) => {
     (res) => {
       dispatch({type: JOIN_USER_SUCCESS, username: form.username})
       alert("JOIN USER SUCCESS. now loading...")
-      props.history.push(`${props.history.location.pathname}/people/${form.username}`)
+      history.push(`${history.location.pathname}/people/${form.username}`)
 
       processAfterJoinUser(dispatch, getState)
     },

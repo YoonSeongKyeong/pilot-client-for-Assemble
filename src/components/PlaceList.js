@@ -1,5 +1,5 @@
 import React from "react";
-import PlaceRow from "./PlaceRow";
+import PlaceRow from "../antDesignComponents/PlaceRow";
 
 const PlaceList = ({ restPlaceObj, myPlaceObj, isSummary, onDeleteSelection, onLikeSelection } ) => {// restPlaceObj와 myPlaceOBj를 갖고 PlaceList를 생성한다.
     let copiedMyPlaceObj = {...myPlaceObj}
@@ -25,7 +25,7 @@ const PlaceList = ({ restPlaceObj, myPlaceObj, isSummary, onDeleteSelection, onL
         })
         let midResult=([...sharedArr, ...unsharedArr]).sort((a, b) => (b.likes - a.likes)) // 정렬 logic : 가능한 많이 겹치는 일정이 먼저 오도록 정렬
         if(isSummary) {
-            midResult=midResult.slice(0,5)
+            midResult=midResult.slice(0,3)
         }
         return midResult.map(eachPlace => 
         <PlaceRow info={eachPlace} key={eachPlace.content} onDeleteSelection={onDeleteSelection} onLikeSelection={onLikeSelection}/>)

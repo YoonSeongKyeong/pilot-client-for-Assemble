@@ -2,11 +2,13 @@ import React from 'react'
 import { connect } from "react-redux";
 import { offRoom } from "../redux/actions";
 
+import { Button } from 'antd';
+import 'antd/dist/antd.css';
 
 const OffRoom = ({offRoom, history}) => {
     return (
         <div>
-            <button onClick={()=>offRoom(history)}>Off Room</button>
+            <Button className="main-button" type="danger" shape="round" icon="left" onClick={()=>offRoom(history)}>back</Button>
         </div>
     )
 }

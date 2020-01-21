@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
-import OffUser from "../components/OffUser";
-import DashboardTab from "../components/DashboardTab";
+import OffUser from "../antDesignComponents/OffUser";
+import DashboardTab from "../antDesignComponents/DashboardTab";
 import ScheduleTab from "../components/ScheduleTab";
 import PlaceTab from "../components/PlaceTab";
 import ActivityTab from "../components/ActivityTab";
 import MenuTab from "../components/MenuTab";
 import PaymentTab from "../components/PaymentTab";
 import Chats from "../components/Chats";
-import { Divider } from 'antd';
+
+import 'antd/dist/antd.css';
+import { Layout, Menu, Icon } from 'antd';
+const { Header, Sider, Content } = Layout;
 
 class Group extends Component {
   constructor(props) {
@@ -20,30 +23,13 @@ class Group extends Component {
   componentDidMount = () => {
   }
 
-  handleDashboardOn = ()=>{
-    this.setState({ selectedTab : 'dashboard' })
-  }
-
-  handleScheduleOn = ()=>{
-    this.setState({ selectedTab : 'schedule' })
-  }
-
-  handlePlaceOn = ()=>{
-    this.setState({ selectedTab : 'place' })
-  }
-
-  handleMenuOn = ()=>{
-    this.setState({ selectedTab : 'menu' })
-  }
-
-  handleActivityOn = ()=>{
-    this.setState({ selectedTab : 'activity' })
-  }
-
-  handlePaymentOn = ()=>{
-    this.setState({ selectedTab : 'payment' })
-  }
-
+  handleDashboardOn = () => this.setState({ selectedTab : 'dashboard' })
+  handleScheduleOn = () => this.setState({ selectedTab : 'schedule' })
+  handlePlaceOn = () => this.setState({ selectedTab : 'place' })
+  handleMenuOn = () => this.setState({ selectedTab : 'menu' })
+  handleActivityOn = () => this.setState({ selectedTab : 'activity' })
+  handlePaymentOn = () => this.setState({ selectedTab : 'payment' })
+  
   showForTab = () => {
     switch(this.state.selectedTab) {
         case "dashboard": 
@@ -64,19 +50,33 @@ class Group extends Component {
   }
 
   render() {
-    return (<Divider>
-        <OffUser history={this.props.history}/>
-          <Divider>
-              <span onClick={this.handleDashboardOn}> dashboard-tab </span>
-              <span onClick={this.handleScheduleOn}> schedule-tab </span>
-              <span onClick={this.handlePlaceOn}> place-tab </span>
-              <span onClick={this.handleActivityOn}> activity-tab </span>
-              <span onClick={this.handleMenuOn}> menu-tab </span>
-              <span onClick={this.handlePaymentOn}> payment-tab </span>
-          </Divider>
-        {this.showForTab()}
+    return (
+    <Layout>
+      <Layout>
+        <Header>
+          <Menu
+          theme="dark"
+          mode="horizontal"
+          defaultSelectedKeys={['dashboard']}
+          style={{ lineHeight: '64px' }}
+          >
+            <Menu.Item ><OffUser history={this.props.history}/></Menu.Item>
+            <Menu.Item key="dashboard" onClick={this.handleDashboardOn}><Icon type="profile" />Dash Board</Menu.Item>
+            <Menu.Item key="schedule" onClick={this.handleScheduleOn}><Icon type="schedule" />Schedule</Menu.Item>
+            <Menu.Item key="place" onClick={this.handlePlaceOn}><Icon type="environment" />Place</Menu.Item>
+            <Menu.Item key="activity" onClick={this.handleActivityOn}><Icon type="car" />Activity</Menu.Item>
+            <Menu.Item key="menu" onClick={this.handleMenuOn}><Icon type="coffee" />Menu</Menu.Item>
+            <Menu.Item key="payment" onClick={this.handlePaymentOn}><Icon type="credit-card" />Payment</Menu.Item>
+          </Menu>
+        </Header>
+        <Content>
+          {this.showForTab()}
+        </Content>
+      </Layout>
+      <Sider>
         <Chats />
-      </Divider>)
+      </Sider>
+    </Layout>)
   }
 }
 
