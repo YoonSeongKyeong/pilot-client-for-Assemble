@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import OffUser from "../antDesignComponents/OffUser";
 import DashboardTab from "../antDesignComponents/DashboardTab";
-import ScheduleTab from "../components/ScheduleTab";
-import PlaceTab from "../components/PlaceTab";
-import ActivityTab from "../components/ActivityTab";
-import MenuTab from "../components/MenuTab";
+import ScheduleTab from "../antDesignComponents/ScheduleTab";
+import PlaceTab from "../antDesignComponents/PlaceTab";
+import ActivityTab from "../antDesignComponents/ActivityTab";
+import MenuTab from "../antDesignComponents/MenuTab";
 import PaymentTab from "../components/PaymentTab";
 import Chats from "../components/Chats";
 
