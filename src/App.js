@@ -3,6 +3,8 @@ import React from 'react';
 import { Home, Room, Group } from './pages';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+import './App.css'
+
 class App extends React.Component {
   state = {};
 
