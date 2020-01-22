@@ -53,7 +53,7 @@ class ScheduleTab extends React.Component {
     return (
       <div style={{ background: '#ECECEC', padding: '30px' }}>
             <Row gutter={16}>
-              <Col span={16}>
+              <Col span={24}>
                 <Card title="SCHEDULE" bordered={false}>
                   <ScheduleList restScheduleObj={restScheduleObj} myScheduleObj={myScheduleObj} isSummary={false}
                   onDeleteSelection={this.onDeleteSelection} onLikeSelection = {this.onLikeSelection}/>

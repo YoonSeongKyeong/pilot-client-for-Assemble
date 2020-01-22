@@ -53,7 +53,7 @@ class PlaceTab extends React.Component {
     return (
       <div style={{ background: '#ECECEC', padding: '30px' }}>
             <Row gutter={16}>
-              <Col span={16}>
+              <Col span={24}>
                 <Card title="PLACE" bordered={false}>
                   <PlaceList restPlaceObj={restPlaceObj} myPlaceObj={myPlaceObj} isSummary={false}
                   onDeleteSelection={this.onDeleteSelection} onLikeSelection = {this.onLikeSelection}/>

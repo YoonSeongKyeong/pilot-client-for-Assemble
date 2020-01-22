@@ -54,7 +54,7 @@ class ActivityTab extends React.Component {
     return (
       <div style={{ background: '#ECECEC', padding: '30px' }}>
             <Row gutter={16}>
-              <Col span={16}>
+              <Col span={24}>
                 <Card title="ACTIVITY" bordered={false}>
                   <ActivityList restActivityObj={restActivityObj} myActivityObj={myActivityObj} isSummary={false}
                   onDeleteSelection={this.onDeleteSelection} onLikeSelection = {this.onLikeSelection}/>
