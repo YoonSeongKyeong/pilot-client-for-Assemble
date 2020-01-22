@@ -21,12 +21,12 @@ class DashboardTab extends React.Component {
     return (
         <div style={{ background: '#ECECEC', padding: '30px' }}>
             <Row gutter={16}>
-              <Col span={8}>
+              <Col span={12}>
                 <Card title="Schedule Top 3" bordered={false}>
                     <ScheduleList restScheduleObj={restScheduleObj} myScheduleObj={myScheduleObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Card title="Place Top 3" bordered={false}>
                     <PlaceList restPlaceObj={restPlaceObj} myPlaceObj={myPlaceObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
@@ -34,12 +34,12 @@ class DashboardTab extends React.Component {
             </Row>
             <Divider ></Divider>
             <Row gutter={16}>
-              <Col span={8}>
+              <Col span={12}>
                 <Card title="Activity Top 3" bordered={false}>
                     <ActivityList restActivityObj={restActivityObj} myActivityObj={myActivityObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <Card title="Menu Top 3" bordered={false}>
                     <MenuList restMenuObj={restMenuObj} myMenuObj={myMenuObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
