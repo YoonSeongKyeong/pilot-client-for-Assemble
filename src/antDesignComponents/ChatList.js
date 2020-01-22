@@ -38,8 +38,8 @@ class ChatList extends React.Component {
 
     if(chats) {
       let rows = chats.map((chat) => 
-      ({content:<ChatRow chat={chat} key={chat.id} isSelfMsg={name===chat.author_name} />}))
-      rows.push({content: <div className="bottomer" style={{ float:"left", clear: "both"}} ref={(el) => { that.messagesEnd = el; }}> </div>})
+      ({content:<ChatRow chat={chat} key={chat.id} isSelfMsg={name===chat.author_name} /> , key:chat.id}))
+      rows.push({content: <div className="bottomer" style={{ float:"left", clear: "both"}} ref={(el) => { that.messagesEnd = el; }}> </div>, key:-1})
 
       return (
       <div>
