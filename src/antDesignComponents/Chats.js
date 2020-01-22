@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import './Chats.css'
 import { Icon } from 'antd';
-import ChatList from '../components/ChatList';
+import ChatList from './ChatList';
 import SubmitChat from '../antDesignComponents/SubmitChat';
 
 class Chats extends React.Component {
