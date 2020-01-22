@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
-import { Comment, Avatar, Input} from 'antd';
+import './Chats.css'
+import { Comment, Avatar, Input, Icon } from 'antd';
 import NewChat from './ChatsNew';
+import ChatList from '../components/ChatList';
 
-
-// // import { createRoom } from "../redux/actions";
 
 class Chats extends React.Component {
   constructor(props) {
@@ -59,23 +59,14 @@ class Chats extends React.Component {
   };
 
   render() {
-    let { chats } = this.props.realtimeManager;
-    let { username } = this.props.joinUser;
-    const list = this.handleChat(chats);
+    let { chats, myself } = this.props.realtimeManager;
+    let { name } = myself;
 
     return (
       <div>
-        <div>
-          {list.map((element) => {
-            return <span key={list.indexOf(element)}>{element}</span>;
-          })}
-        </div>
-        <div>
-          <NewChat 
-           />
-          {/* <Button onClick={this.newChat} type="primary">
-            Submit
-          </Button> */}
+        <div style={{ textAlign: 'center', color: 'black', margin: '20px 30px 25px 30px', 'backgroundColor': 'white'}} fontSize='3rem'><Icon size="" type="message"/> CHATTING</div>
+        <div style={{ padding: '0 30px 30px 30px '}}>
+          <ChatList chats={chats} name={name}/>
         </div>
       </div>
     );
@@ -83,6 +74,6 @@ class Chats extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { realtimeManager: state.realtimeManager, joinUser: state.joinUser };
+  return { realtimeManager: state.realtimeManager };
 };
 export default connect(mapStateToProps)(Chats);

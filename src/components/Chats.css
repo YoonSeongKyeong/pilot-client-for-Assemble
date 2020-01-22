@@ -1,0 +1,64 @@
+.chat-row {
+    word-break: break-all;
+    background-color: rgba(0, 0, 0, 0.578);
+    border-radius: 0.4em;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(255, 255, 255);
+    padding: 0.5em 0.7em;
+    margin: 0.3em;
+    color: rgb(255, 255, 255);
+    margin-left: 2em;
+    display: inline-block;
+    white-space: normal;
+    max-width: 80%;
+}
+
+.self-chat-row {
+    word-break: break-all;
+    background-color: rgba(4, 6, 34, 0.904);
+    border-radius: 0.4em;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(255, 255, 255);
+    padding: 0.5em 0.7em;
+    margin: 0.3em;
+    color: rgb(255, 255, 255);
+    margin-right: 2em;
+    display: inline-block;
+    white-space: normal;
+    max-width: 80%;
+    text-align: right;
+}
+
+.ant-table-tbody > tr > td {
+    border-style: none;
+}
+
+.avatar {
+    margin-bottom: 0.5em;
+    background-color: rgb(4, 72, 14);
+}
+
+.time-tag {
+    font-size: 0.6rem;
+    margin:"5px";
+    padding:"0px 4px";
+}
+
+.self-time-tag {
+    text-align: right;
+    font-size: 0.6rem;
+    margin:"5px";
+    padding:"0px 4px";
+}
+
+.chat-row-cover {
+    white-space: nowrap;
+}
+
+.self-chat-row-cover {
+    justify-content: flex-end;
+    white-space: nowrap;
+    float: right;
+}
