@@ -40,10 +40,10 @@ import {
   SUBMIT_MENU_REQUEST,
   SUBMIT_MENU_SUCCESS,
   SUBMIT_MENU_FAILURE,
+  NEW_CHAT,
   SUBMIT_CHAT_REQUEST,
   SUBMIT_CHAT_SUCCESS,
-  SUBMIT_CHAT_FAILURE,
-  NEW_CHAT
+  SUBMIT_CHAT_FAILURE
 } from "./actionTypes";
 import Axios from "axios";
 import socketio from 'socket.io-client';

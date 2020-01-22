@@ -23,11 +23,10 @@ import {
     SUBMIT_MENU_REQUEST,
     SUBMIT_MENU_SUCCESS,
     SUBMIT_MENU_FAILURE, 
+    NEW_CHAT,
     SUBMIT_CHAT_REQUEST,
     SUBMIT_CHAT_SUCCESS,
-    SUBMIT_CHAT_FAILURE,
-    NEW_CHAT
- 
+    SUBMIT_CHAT_FAILURE
 } from "../actionTypes";
 
 const initialState = {
@@ -193,6 +192,8 @@ export default function (state = initialState, action) {
                 waitingSubmitActivity: false,
                 isSubmitMenuSuccess: false,
                 waitingSubmitMenu: false,
+                isSubmitChatSuccess: false,
+                waitingSubmitChat: false,
                 roomId: "",
                 roomname: "",
                 restScheduleObj: {},
@@ -226,8 +227,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isSubmitScheduleSuccess: true,
-                waitingSubmitSchedule: false,
-                socketId: action.socketId
+                waitingSubmitSchedule: false
             };
         }
         case SUBMIT_SCHEDULE_FAILURE: {
@@ -303,8 +303,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isSubmitPlaceSuccess: true,
-                waitingSubmitPlace: false,
-                socketId: action.socketId
+                waitingSubmitPlace: false
             };
         }
         case SUBMIT_PLACE_FAILURE: {
@@ -438,8 +437,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isSubmitActivitySuccess: true,
-                waitingSubmitActivity: false,
-                socketId: action.socketId
+                waitingSubmitActivity: false
             };
         }
         case SUBMIT_ACTIVITY_FAILURE: {
@@ -517,8 +515,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 isSubmitMenuSuccess: true,
-                waitingSubmitMenu: false,
-                socketId: action.socketId
+                waitingSubmitMenu: false
             };
         }
         case SUBMIT_MENU_FAILURE: {
@@ -532,22 +529,21 @@ export default function (state = initialState, action) {
         case SUBMIT_CHAT_REQUEST: {
             return {
                 ...state,
-                waitingSubmitCHAT: true
+                waitingSubmitChat: true
             };
         }
         case SUBMIT_CHAT_SUCCESS: {
             return {
                 ...state,
-                isSubmitCHATSuccess: true,
-                waitingSubmitCHAT: false,
-                socketId: action.socketId
+                isSubmitChatSuccess: true,
+                waitingSubmitChat: false
             };
         }
         case SUBMIT_CHAT_FAILURE: {
             return {
                 ...state,
-                isSubmitCHATSuccess: false,
-                waitingSubmitCHAT: false
+                isSubmitChatSuccess: false,
+                waitingSubmitChat: false
             };
         }
         case NEW_CHAT: {
