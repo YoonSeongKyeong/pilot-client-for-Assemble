@@ -39,10 +39,15 @@ import {
   NEW_MENU_LIST,
   SUBMIT_MENU_REQUEST,
   SUBMIT_MENU_SUCCESS,
-  SUBMIT_MENU_FAILURE
+  SUBMIT_MENU_FAILURE,
+  SUBMIT_CHAT_REQUEST,
+  SUBMIT_CHAT_SUCCESS,
+  SUBMIT_CHAT_FAILURE,
+  NEW_CHAT
 } from "./actionTypes";
 import Axios from "axios";
 import socketio from 'socket.io-client';
+
 
 export const createRoom = form => (dispatch, getState) => {
   dispatch({
@@ -91,8 +96,8 @@ let processAfterJoinUser = (dispatch, getState) => {
     (res) => {
       dispatch({type: GET_MODEL_SUCCESS, model: res.data, username: username})
     },
-    (error) => {dispatch({type: GET_MODEL_FAILURE, error: error})
-      dispatch()
+    (error) => {dispatch({type: GET_MODEL_FAILURE})
+      console.error(error)
       alert("GET MODEL FAILURE. 서버에서 모델을 불러오지 못했습니다.")
     })
 
@@ -117,7 +122,7 @@ let processAfterJoinUser = (dispatch, getState) => {
         // model data를 지우는 routine 실행
       });
       socket.on('chat message', (msg) => {
-        console.log("chat message: ", msg);
+        dispatch({type: NEW_CHAT, msg: msg})
       });
       socket.on('new person', (newPerson) => {// 새 person이 들어왔을 때의 로직
         dispatch({ type: NEW_PERSON, newPerson: newPerson })
@@ -327,5 +332,24 @@ export const submitMenu = (menu_list) => (dispatch, getState) => {
       alert("POST MENU FAILURE.")
     })
 };
+
+//! /rooms/:room_id/chats
+export const postChat = (new_chat) => (dispatch, getState) => {
+  console.log(new_chat)
+  dispatch({
+    type: SUBMIT_CHAT_REQUEST,
+  })
+  let {roomId} = getState().realtimeManager
+  Axios.post(`http://localhost:3000/rooms/${roomId}/chats`, new_chat, {withCredentials: true})
+  .then((res) => {
+    dispatch({type: SUBMIT_CHAT_SUCCESS})
+    
+  },
+  (error) => {
+    dispatch({type: SUBMIT_CHAT_FAILURE, error: error})
+    alert("POST CHAT FAILURE.")
+  })
+  
+}
 
 

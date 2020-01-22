@@ -22,7 +22,12 @@ import {
     NEW_MENU_LIST,
     SUBMIT_MENU_REQUEST,
     SUBMIT_MENU_SUCCESS,
-    SUBMIT_MENU_FAILURE
+    SUBMIT_MENU_FAILURE, 
+    SUBMIT_CHAT_REQUEST,
+    SUBMIT_CHAT_SUCCESS,
+    SUBMIT_CHAT_FAILURE,
+    NEW_CHAT
+ 
 } from "../actionTypes";
 
 const initialState = {
@@ -38,6 +43,8 @@ const initialState = {
     waitingSubmitActivity: false,
     isSubmitMenuSuccess: false,
     waitingSubmitMenu: false,
+    isSubmitChatSuccess: false,
+    waitingSubmitChat: false,
     roomId: "",
     roomname: "",
     restScheduleObj: {},
@@ -521,6 +528,38 @@ export default function (state = initialState, action) {
                 waitingSubmitMenu: false
             };
         }
+
+        case SUBMIT_CHAT_REQUEST: {
+            return {
+                ...state,
+                waitingSubmitCHAT: true
+            };
+        }
+        case SUBMIT_CHAT_SUCCESS: {
+            return {
+                ...state,
+                isSubmitCHATSuccess: true,
+                waitingSubmitCHAT: false,
+                socketId: action.socketId
+            };
+        }
+        case SUBMIT_CHAT_FAILURE: {
+            return {
+                ...state,
+                isSubmitCHATSuccess: false,
+                waitingSubmitCHAT: false
+            };
+        }
+        case NEW_CHAT: {
+            debugger
+            let {msg} = action
+            console.log(msg)
+            return {
+                ...state,
+                chats: [...state.chats, msg]
+            }
+        }
+
         default:
             return state;
     }
