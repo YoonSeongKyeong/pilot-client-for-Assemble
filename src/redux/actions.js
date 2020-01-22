@@ -120,6 +120,9 @@ let processAfterJoinUser = (dispatch, getState) => {
         console.log("drop")
         socket.disconnect()
         // model data를 지우는 routine 실행
+        dispatch({type: OFF_USER})
+        dispatch({type: OFF_ROOM})
+        // 이후 맨 처음 화면으로 돌아간다.
       });
       socket.on('chat message', (msg) => {
         dispatch({type: NEW_CHAT, msg: msg})
@@ -334,13 +337,12 @@ export const submitMenu = (menu_list) => (dispatch, getState) => {
 };
 
 //! /rooms/:room_id/chats
-export const postChat = (new_chat) => (dispatch, getState) => {
-  console.log(new_chat)
+export const postChat = (newChat) => (dispatch, getState) => {
   dispatch({
     type: SUBMIT_CHAT_REQUEST,
   })
   let {roomId} = getState().realtimeManager
-  Axios.post(`http://localhost:3000/rooms/${roomId}/chats`, new_chat, {withCredentials: true})
+  Axios.post(`http://localhost:3000/rooms/${roomId}/chats`, newChat, {withCredentials: true})
   .then((res) => {
     dispatch({type: SUBMIT_CHAT_SUCCESS})
     

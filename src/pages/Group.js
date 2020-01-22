@@ -8,7 +8,7 @@ import PlaceTab from "../antDesignComponents/PlaceTab";
 import ActivityTab from "../antDesignComponents/ActivityTab";
 import MenuTab from "../antDesignComponents/MenuTab";
 import PaymentTab from "../components/PaymentTab";
-import Chats from "../components/Chats";
+import Chats from "../antDesignComponents/Chats";
 
 import 'antd/dist/antd.css';
 import { Layout, Menu, Icon } from 'antd';
