@@ -58,7 +58,13 @@ const initialState = {
     people: [],
     myself: {},
     chats: [],
-    socketId:null
+    socketId:null,
+    recentChatId: '',// double message patch
+    recentNewPersonName: '',// double message patch
+    recentScheduleId: '',// double message patch
+    recentPlaceId: '',// double message patch
+    recentActivityId: '',// double message patch
+    recentMenuId: '',// double message patch
 };
 
 export default function (state = initialState, action) {
@@ -212,9 +218,14 @@ export default function (state = initialState, action) {
             };
         }
         case NEW_PERSON: {
+            let {newPerson} = action
+            if(newPerson.name===state.recentNewPersonName) {
+                return state
+            }
             return {
                 ...state,
-                people: [...state.people, action.newPerson]
+                people: [...state.people, action.newPerson],
+                recentNewPersonName: newPerson.name
             };
         }
         case SUBMIT_SCHEDULE_REQUEST: {
@@ -240,7 +251,10 @@ export default function (state = initialState, action) {
         case NEW_SCHEDULE_LIST: {
             debugger
             let {myself, people, restScheduleObj} = state
-            let {updaterName, avail_schedules_list} = action
+            let {updaterName, avail_schedules_list, id} = action
+            if(id === state.recentScheduleId) {// avoid duplicate message
+                return state
+            }
             for(let person of people) {
                 if (person.name === updaterName) {
                     if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 avail_schedules_list를 덮어쓴다.
@@ -258,7 +272,8 @@ export default function (state = initialState, action) {
                                     return {...p, avail_schedules_list : avail_schedules_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentScheduleId:id
                         }
                     }
                     else {// oldScheduleList를 갖고와서 restObj에서 빼고, restObj에 newScheduleList를 더한다. 이후 person의 avail_schedules_list를 덮어쓴다.
@@ -286,7 +301,8 @@ export default function (state = initialState, action) {
                                     return {...p, avail_schedules_list : avail_schedules_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentScheduleId:id
                         }
                     }
                 }
@@ -316,7 +332,10 @@ export default function (state = initialState, action) {
         case NEW_PLACE_LIST: {
             debugger
             let {myself, people, restPlaceObj} = state
-            let {updaterName, avail_places_list} = action
+            let {updaterName, avail_places_list, id} = action
+            if(id === state.recentPlaceId) {// avoid duplicate message
+                return state
+            }
             for(let person of people) {
                 if (person.name === updaterName) {
                     if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 avail_places_list를 덮어쓴다.
@@ -334,7 +353,8 @@ export default function (state = initialState, action) {
                                     return {...p, avail_places_list : avail_places_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentPlaceId: id
                         }
                     }
                     else {// oldPlaceList를 갖고와서 restObj에서 빼고, restObj에 newPlaceList를 더한다. 이후 person의 avail_places_list를 덮어쓴다.
@@ -362,7 +382,8 @@ export default function (state = initialState, action) {
                                     return {...p, avail_places_list : avail_places_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentPlaceId: id
                         }
                     }
                 }
@@ -372,7 +393,10 @@ export default function (state = initialState, action) {
         case NEW_ACTIVITY_LIST: {
             debugger
             let {myself, people, restActivityObj} = state
-            let {updaterName, activity_list} = action
+            let {updaterName, activity_list, id} = action
+            if(id === state.recentActivityId) {// avoid duplicate message
+                return state
+            }
             for(let person of people) {
                 if (person.name === updaterName) {
                     if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 activity_list를 덮어쓴다.
@@ -392,7 +416,8 @@ export default function (state = initialState, action) {
                                     return {...p, activity_list : activity_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentActivityId: id
                         }
                     }
                     else {// oldActivityList를 갖고와서 restObj에서 빼고, restObj에 newActivityList를 더한다. 이후 person의 activity_list를 덮어쓴다.
@@ -420,7 +445,8 @@ export default function (state = initialState, action) {
                                     return {...p, activity_list : activity_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentActivityId: id
                         }
                     }
                 }
@@ -450,7 +476,10 @@ export default function (state = initialState, action) {
         case NEW_MENU_LIST: {
             debugger
             let {myself, people, restMenuObj} = state
-            let {updaterName, menu_list} = action
+            let {updaterName, menu_list, id} = action
+            if(id === state.recentMenuId) {// avoid duplicate message
+                return state
+            }
             for(let person of people) {
                 if (person.name === updaterName) {
                     if(updaterName === myself.name) {// myself의 object를 만들고, myself와 person의 menu_list를 덮어쓴다.
@@ -470,7 +499,8 @@ export default function (state = initialState, action) {
                                     return {...p, menu_list : menu_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentMenuId: id
                         }
                     }
                     else {// oldMenuList를 갖고와서 restObj에서 빼고, restObj에 newMenuList를 더한다. 이후 person의 menu_list를 덮어쓴다.
@@ -498,7 +528,8 @@ export default function (state = initialState, action) {
                                     return {...p, menu_list : menu_list}
                                 } 
                                 return p
-                            })
+                            }),
+                            recentMenuId: id
                         }
                     }
                 }
@@ -549,10 +580,13 @@ export default function (state = initialState, action) {
         case NEW_CHAT: {
             debugger
             let {msg} = action
-            console.log(msg)
+            if(state.recentChatId===msg.id) {// avoid duplicate message
+                return state
+            }
             return {
                 ...state,
-                chats: [...state.chats, msg]
+                chats: [...state.chats, msg],
+                recentChatId:msg.id
             }
         }
 

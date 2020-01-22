@@ -124,10 +124,11 @@ let processAfterJoinUser = (dispatch, getState) => {
         dispatch({type: OFF_ROOM})
         // 이후 맨 처음 화면으로 돌아간다.
       });
-      socket.on('chat message', (msg) => {
+      socket.on('chat message', (msg) => {// double-message-patch by state.realtimeManager.recentChatId
         dispatch({type: NEW_CHAT, msg: msg})
+        console.log('got chat message')
       });
-      socket.on('new person', (newPerson) => {// 새 person이 들어왔을 때의 로직
+      socket.on('new person', (newPerson) => {// 새 person이 들어왔을 때의 로직 // double-message-patch by state.realtimeManager.recentNewPersonName
         dispatch({ type: NEW_PERSON, newPerson: newPerson })
       });
       socket.on('delete person', (msg) => {
@@ -136,17 +137,17 @@ let processAfterJoinUser = (dispatch, getState) => {
           // 모델에서 name에 해당하는 data를 삭제하고,
           // 만약 자신이 delete person이라면 socket.disconnect를 실행한다.
       });
-      socket.on('new schedule_list', ({name, avail_schedules_list}) => {
-        dispatch({ type: NEW_SCHEDULE_LIST, updaterName: name, avail_schedules_list: avail_schedules_list })
+      socket.on('new schedule_list', ({name, avail_schedules_list, id}) => {// double-message-patch by state.realtimeManager.recentScheduleId
+        dispatch({ type: NEW_SCHEDULE_LIST, updaterName: name, avail_schedules_list: avail_schedules_list, id: id })
       });
-      socket.on('new place_list', ({name, avail_places_list}) => {
-        dispatch({ type: NEW_PLACE_LIST, updaterName: name, avail_places_list: avail_places_list })
+      socket.on('new place_list', ({name, avail_places_list, id}) => {// double-message-patch by state.realtimeManager.recentPlaceId
+        dispatch({ type: NEW_PLACE_LIST, updaterName: name, avail_places_list: avail_places_list, id: id })
       });
-      socket.on('new activity_list', ({name, activity_list}) => {
-        dispatch({ type: NEW_ACTIVITY_LIST, updaterName: name, activity_list: activity_list })
+      socket.on('new activity_list', ({name, activity_list, id}) => {// double-message-patch by state.realtimeManager.recentActivityId
+        dispatch({ type: NEW_ACTIVITY_LIST, updaterName: name, activity_list: activity_list, id: id })
       });
-      socket.on('new menu_list', ({name, menu_list}) => {
-        dispatch({ type: NEW_MENU_LIST, updaterName: name, menu_list: menu_list })
+      socket.on('new menu_list', ({name, menu_list, id}) => {// double-message-patch by state.realtimeManager.recentMenuId
+        dispatch({ type: NEW_MENU_LIST, updaterName: name, menu_list: menu_list, id: id })
       });
   })();
 }

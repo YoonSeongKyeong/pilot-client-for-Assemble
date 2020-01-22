@@ -20,6 +20,7 @@ class SubmitChat extends React.Component {
     onPostChat = () => {
         let {postChat} = this.props
         let {chatInputValue} = this.state 
+        if(chatInputValue==='') return
         postChat({content:chatInputValue})
         this.setState({chatInputValue:''})
     }
