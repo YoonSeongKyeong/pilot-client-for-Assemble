@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { connect } from "react-redux";
+import { shortcutFromMemory } from "../redux/actions";
 import OffUser from "../antDesignComponents/OffUser";
 import DashboardTab from "../antDesignComponents/DashboardTab";
 import ScheduleTab from "../antDesignComponents/ScheduleTab";
@@ -21,6 +23,7 @@ class Group extends Component {
   }
 
   componentDidMount = () => {
+    this.props.shortcutFromMemory(this.props)
   }
 
   handleDashboardOn = () => this.setState({ selectedTab : 'dashboard' })
@@ -73,11 +76,14 @@ class Group extends Component {
           {this.showForTab()}
         </Content>
       </Layout>
-      <Sider>
+      <Sider width="35%">
         <Chats />
       </Sider>
     </Layout>)
   }
 }
 
-export default Group
+export default connect(
+  null,
+  { shortcutFromMemory }
+)(Group);
