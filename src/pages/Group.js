@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { shortcutFromMemory } from "../redux/actions";
+import { keepConnectionInRefresh } from "../redux/actions";
 import OffUser from "../antDesignComponents/OffUser";
 import DashboardTab from "../antDesignComponents/DashboardTab";
 import ScheduleTab from "../antDesignComponents/ScheduleTab";
@@ -23,7 +23,7 @@ class Group extends Component {
   }
 
   componentDidMount = () => {
-    this.props.shortcutFromMemory(this.props)
+    this.props.keepConnectionInRefresh(this.props)
   }
 
   handleDashboardOn = () => this.setState({ selectedTab : 'dashboard' })
@@ -85,5 +85,5 @@ class Group extends Component {
 
 export default connect(
   null,
-  { shortcutFromMemory }
+  { keepConnectionInRefresh }
 )(Group);

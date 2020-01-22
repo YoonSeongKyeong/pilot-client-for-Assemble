@@ -193,6 +193,46 @@ export const shortcutFromMemory = (props) => (dispatch, getState) => {
   })
 };
 
+export const keepConnectionInRefresh = (props) => (dispatch, getState) => {
+  debugger
+  dispatch({
+    type: MEMORY_REQUEST,
+  })
+  Axios.get(`http://localhost:3000/rooms/memory`, {withCredentials: true}).then(
+    (res) => {// process after fetching memory finished
+      debugger
+      if(res.data.room_id) {
+        let roomId = res.data.room_id
+        if(res.data.name) {
+          let username = res.data.name
+          dispatch({type: MEMORY_JOIN_USER, username: username, roomId: roomId })
+          props.history.push(`/rooms/${roomId}/people/${username}`)
+
+          processAfterJoinUser(dispatch, getState)
+        }
+        else {
+          if(!getState().joinRoom.isRoomJoinSuccess) {alert(`USER NOT EXIST ANYMORE  fall back to room: ${roomId}`)}
+          dispatch({type: MEMORY_JOIN_ROOM, roomId: roomId })
+          props.history.push(`/rooms/${roomId}`)
+        }
+      }
+      else {
+        dispatch({type: MEMORY_EMPTY})
+        if(props.history.location.pathname !== '/') {
+          alert(`NOT AUTHORIZED YET, PLEASE CREATE OR JOIN THE ROOM`)
+          props.history.push(`/`)
+        }
+      }
+    },
+    (error) => {
+      dispatch({type: MEMORY_EMPTY})
+      if(props.history.location.pathname !== '/') {
+        alert(`NOT AUTHORIZED YET, PLEASE CREATE OR JOIN THE ROOM`)
+        props.history.push(`/`)
+      }
+  })
+};
+
 export const offRoom = (history) => (dispatch, getState) => {// offRoom has reducer in reducers/joinROOM
   Axios.get(`http://localhost:3000/rooms/disconnect`, {withCredentials: true}).then(
     (res) => {// process after joining room finished
