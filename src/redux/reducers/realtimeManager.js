@@ -77,6 +77,9 @@ export default function (state = initialState, action) {
         }
         case GET_MODEL_SUCCESS: {
             debugger
+            if(state.isGetModelSuccess) {// prevent redundant modeling
+                return state
+            }
             let {room_id, roomname, people, chats, payment_list } = action.model
             let username = action.username
             let restScheduleObj = {}
