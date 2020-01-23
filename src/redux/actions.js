@@ -104,7 +104,7 @@ let processAfterJoinUser = (dispatch, getState) => {
     })
 
     dispatch({type: CONNECT_SOCKET_REQUEST})
-    const socket = socketio.connect('${baseurl}', {
+    const socket = socketio.connect(`${baseurl}`, {
       query: `roomId=${roomId}&name=${username}`
   });
   (() => {
@@ -127,6 +127,7 @@ let processAfterJoinUser = (dispatch, getState) => {
         // 이후 맨 처음 화면으로 돌아간다.
       });
       socket.on('chat message', (msg) => {// double-message-patch by state.realtimeManager.recentChatId
+        debugger
         dispatch({type: NEW_CHAT, msg: msg})
         console.log('got chat message')
       });
