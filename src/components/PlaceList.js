@@ -25,7 +25,7 @@ const PlaceList = ({ restPlaceObj, myPlaceObj, isSummary, onDeleteSelection, onL
         })
         let midResult=([...sharedArr, ...unsharedArr]).sort((a, b) => (b.likes - a.likes)) // 정렬 logic : 가능한 많이 겹치는 일정이 먼저 오도록 정렬
         if(isSummary) {
-            midResult=midResult.slice(0,3)
+            midResult=midResult.slice(0,5)
         }
         return midResult.map(eachPlace => 
         <PlaceRow info={eachPlace} key={eachPlace.content} onDeleteSelection={onDeleteSelection} onLikeSelection={onLikeSelection}/>)
