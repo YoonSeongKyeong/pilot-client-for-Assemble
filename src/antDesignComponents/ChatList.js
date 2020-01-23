@@ -43,7 +43,7 @@ class ChatList extends React.Component {
 
       return (
       <div>
-        <Table showHeader={false} pagination={false} columns={columns} dataSource={rows} scroll={{ y: 450 }} />
+        <Table showHeader={false} pagination={false} columns={columns} dataSource={rows} scroll={{ y: 610 }} />
       </div>)
         
     }

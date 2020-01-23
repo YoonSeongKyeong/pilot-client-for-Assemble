@@ -22,12 +22,12 @@ class DashboardTab extends React.Component {
         <div style={{ background: '#ECECEC', padding: '30px' }}>
             <Row gutter={16}>
               <Col span={12}>
-                <Card title="Schedule Top 3" bordered={false}>
+                <Card title="Schedule Top 5" bordered={false}>
                     <ScheduleList restScheduleObj={restScheduleObj} myScheduleObj={myScheduleObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
               </Col>
               <Col span={12}>
-                <Card title="Place Top 3" bordered={false}>
+                <Card title="Place Top 5" bordered={false}>
                     <PlaceList restPlaceObj={restPlaceObj} myPlaceObj={myPlaceObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
               </Col>
@@ -35,12 +35,12 @@ class DashboardTab extends React.Component {
             <Divider ></Divider>
             <Row gutter={16}>
               <Col span={12}>
-                <Card title="Activity Top 3" bordered={false}>
+                <Card title="Activity Top 5" bordered={false}>
                     <ActivityList restActivityObj={restActivityObj} myActivityObj={myActivityObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
               </Col>
               <Col span={12}>
-                <Card title="Menu Top 3" bordered={false}>
+                <Card title="Menu Top 5" bordered={false}>
                     <MenuList restMenuObj={restMenuObj} myMenuObj={myMenuObj} isSummary={true} onDeleteSelection={()=>null} onLikeSelection={()=>null}/>
                 </Card>
               </Col>
