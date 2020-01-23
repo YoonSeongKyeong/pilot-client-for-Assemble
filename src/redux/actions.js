@@ -48,12 +48,14 @@ import {
 import Axios from "axios";
 import socketio from 'socket.io-client';
 
+import baseurl from '../config/baseurl'
+console.log(baseurl)
 
 export const createRoom = form => (dispatch, getState) => {
   dispatch({
     type: CREATE_ROOM_REQUEST,
   })
-  Axios.post(`http://localhost:3000/rooms`, {
+  Axios.post(`${baseurl}/rooms`, {
     password: form.password,
     roomname: form.roomname
   }).then(
@@ -71,7 +73,7 @@ export const joinRoom = (form, history) => (dispatch, getState) => {
   dispatch({
     type: JOIN_ROOM_REQUEST,
   })
-  Axios.post(`http://localhost:3000/rooms/${form.roomId}`, {
+  Axios.post(`${baseurl}/rooms/${form.roomId}`, {
     password: form.password
   }, {withCredentials: true}).then(
     (res) => {// process after joining room finished
@@ -92,7 +94,7 @@ let processAfterJoinUser = (dispatch, getState) => {
 
   // process after joining user finished
   dispatch({type: GET_MODEL_REQUEST})// 모델 불러오기
-  Axios.get(`http://localhost:3000/rooms/${roomId}/model`, {withCredentials: true}).then(
+  Axios.get(`${baseurl}/rooms/${roomId}/model`, {withCredentials: true}).then(
     (res) => {
       dispatch({type: GET_MODEL_SUCCESS, model: res.data, username: username})
     },
@@ -102,7 +104,7 @@ let processAfterJoinUser = (dispatch, getState) => {
     })
 
     dispatch({type: CONNECT_SOCKET_REQUEST})
-    const socket = socketio.connect('http://localhost:3000', {
+    const socket = socketio.connect('${baseurl}', {
       query: `roomId=${roomId}&name=${username}`
   });
   (() => {
@@ -157,7 +159,7 @@ export const shortcutFromMemory = (props) => (dispatch, getState) => {
   dispatch({
     type: MEMORY_REQUEST,
   })
-  Axios.get(`http://localhost:3000/rooms/memory`, {withCredentials: true}).then(
+  Axios.get(`${baseurl}/rooms/memory`, {withCredentials: true}).then(
     (res) => {// process after fetching memory finished
       debugger
       if(res.data.room_id) {
@@ -198,7 +200,7 @@ export const keepConnectionInRefresh = (props) => (dispatch, getState) => {
   dispatch({
     type: MEMORY_REQUEST,
   })
-  Axios.get(`http://localhost:3000/rooms/memory`, {withCredentials: true}).then(
+  Axios.get(`${baseurl}/rooms/memory`, {withCredentials: true}).then(
     (res) => {// process after fetching memory finished
       debugger
       if(res.data.room_id) {
@@ -234,7 +236,7 @@ export const keepConnectionInRefresh = (props) => (dispatch, getState) => {
 };
 
 export const offRoom = (history) => (dispatch, getState) => {// offRoom has reducer in reducers/joinROOM
-  Axios.get(`http://localhost:3000/rooms/disconnect`, {withCredentials: true}).then(
+  Axios.get(`${baseurl}/rooms/disconnect`, {withCredentials: true}).then(
     (res) => {// process after joining room finished
       alert("OFF ROOM SUCCESS. now loading...")
       history.push('/')
@@ -252,7 +254,7 @@ export const createUser = form => (dispatch, getState) => {
     type: CREATE_USER_REQUEST,
   })
   let {roomId} = getState().joinRoom
-  Axios.post(`http://localhost:3000/rooms/${roomId}/people`, {
+  Axios.post(`${baseurl}/rooms/${roomId}/people`, {
     name: form.username
   }).then(
     (res) => {// process after creating user finished
@@ -271,7 +273,7 @@ export const joinUser = (form, history) => (dispatch, getState) => {
   })
   debugger
   let {roomId} = getState().joinRoom
-  Axios.get(`http://localhost:3000/rooms/${roomId}/people/${form.username}`, {withCredentials: true}).then(
+  Axios.get(`${baseurl}/rooms/${roomId}/people/${form.username}`, {withCredentials: true}).then(
     (res) => {
       dispatch({type: JOIN_USER_SUCCESS, username: form.username})
       alert("JOIN USER SUCCESS. now loading...")
@@ -288,7 +290,7 @@ export const joinUser = (form, history) => (dispatch, getState) => {
 export const offUser = (history) => (dispatch, getState) => {// offUser has reducer in reducers/joinUser
   let {roomId} = getState().joinRoom
   let {socketId} = getState().realtimeManager
-  Axios.get(`http://localhost:3000/rooms/${roomId}/people/disconnect/?socket_id=${socketId}`, {withCredentials: true}).then(
+  Axios.get(`${baseurl}/rooms/${roomId}/people/disconnect/?socket_id=${socketId}`, {withCredentials: true}).then(
     (res) => {// process after joining User finished
       alert("OFF USER SUCCESS. now loading...")
 
@@ -309,7 +311,7 @@ export const submitSchedule = (avail_schedules_list) => (dispatch, getState) => 
   })
   debugger
   let {roomId, myself:{name}} = getState().realtimeManager
-  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/avail_schedules_list`, {
+  Axios.put(`${baseurl}/rooms/${roomId}/people/${name}/avail_schedules_list`, {
     avail_schedules_list: avail_schedules_list
   }).then(
     (res) => {
@@ -328,7 +330,7 @@ export const submitPlace = (avail_places_list) => (dispatch, getState) => {
   })
   debugger
   let {roomId, myself:{name}} = getState().realtimeManager
-  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/avail_places_list`, {
+  Axios.put(`${baseurl}/rooms/${roomId}/people/${name}/avail_places_list`, {
     avail_places_list: avail_places_list
   }).then(
     (res) => {
@@ -346,7 +348,7 @@ export const submitActivity = (activity_list) => (dispatch, getState) => {
     type: SUBMIT_ACTIVITY_REQUEST,
   })
   let {roomId, myself:{name}} = getState().realtimeManager
-  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/activity_list`, {
+  Axios.put(`${baseurl}/rooms/${roomId}/people/${name}/activity_list`, {
     activity_list: activity_list
   }).then(
     (res) => {
@@ -364,7 +366,7 @@ export const submitMenu = (menu_list) => (dispatch, getState) => {
     type: SUBMIT_MENU_REQUEST,
   })
   let {roomId, myself:{name}} = getState().realtimeManager
-  Axios.put(`http://localhost:3000/rooms/${roomId}/people/${name}/menu_list`, {
+  Axios.put(`${baseurl}/rooms/${roomId}/people/${name}/menu_list`, {
     menu_list: menu_list
   }).then(
     (res) => {
@@ -383,7 +385,7 @@ export const postChat = (newChat) => (dispatch, getState) => {
     type: SUBMIT_CHAT_REQUEST,
   })
   let {roomId} = getState().realtimeManager
-  Axios.post(`http://localhost:3000/rooms/${roomId}/chats`, newChat, {withCredentials: true})
+  Axios.post(`${baseurl}/rooms/${roomId}/chats`, newChat, {withCredentials: true})
   .then((res) => {
     dispatch({type: SUBMIT_CHAT_SUCCESS})
     
