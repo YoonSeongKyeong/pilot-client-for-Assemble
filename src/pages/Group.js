@@ -7,7 +7,7 @@ import ScheduleTab from "../antDesignComponents/ScheduleTab";
 import PlaceTab from "../antDesignComponents/PlaceTab";
 import ActivityTab from "../antDesignComponents/ActivityTab";
 import MenuTab from "../antDesignComponents/MenuTab";
-import PaymentTab from "../components/PaymentTab";
+// import PaymentTab from "../components/PaymentTab";
 import Chats from "../antDesignComponents/Chats";
 
 import 'antd/dist/antd.css';
@@ -45,8 +45,8 @@ class Group extends Component {
         return <MenuTab />
         case "activity": 
         return <ActivityTab />
-        case "payment": 
-        return <PaymentTab />
+        // case "payment": 
+        // return <PaymentTab />
         default :  
         return <DashboardTab />
     }
@@ -69,7 +69,7 @@ class Group extends Component {
             <Menu.Item key="place" onClick={this.handlePlaceOn}><Icon type="environment" />Place</Menu.Item>
             <Menu.Item key="activity" onClick={this.handleActivityOn}><Icon type="car" />Activity</Menu.Item>
             <Menu.Item key="menu" onClick={this.handleMenuOn}><Icon type="coffee" />Menu</Menu.Item>
-            <Menu.Item key="payment" onClick={this.handlePaymentOn}><Icon type="credit-card" />Payment</Menu.Item>
+            {/* <Menu.Item key="payment" onClick={this.handlePaymentOn}><Icon type="credit-card" />Payment</Menu.Item> */}
           </Menu>
         </Header>
         <Content>
