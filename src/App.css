@@ -1,15 +1,39 @@
-body {
-    /* background-image: url("./img/background.jpg"); */
-    /* background-size: cover; */
+/* body::after {
+    background-image: url("./img/background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
     background-color: gainsboro;
+} */
+
+body {
+    position:relative;
+    background-color: gainsboro;
+    z-index:1;
 }
+body:after {
+    background-image:url("./img/background.jpg");
+    background-repeat: no-repeat;
+    top:0;
+    left:0;
+    position:absolute;
+    background-size: cover;
+    opacity:0.1;
+    filter:alpha(opacity=50);
+    z-index:-1;
+    content:"";
+    width:100%;
+    height:100%;
+}
+
 
 .first-title {/* in pages.{Home.js, Room.js} */
     font-family: 'Bungee Inline', cursive;
-    color: black;
-    font-size: 6rem;
+    color: rgba(0, 13, 35, 0.925);
+    font-size: 7rem;
     justify-content: center;
-    margin: 8% auto 5% auto;
+    margin: 0 auto 3rem auto;
+    padding-top: 4rem;
+    position: relative;
 }
 
 .main-button-container div {/* in pages/{Home.js, Room.js} */
