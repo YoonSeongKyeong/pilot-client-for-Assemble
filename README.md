@@ -2,6 +2,8 @@
 
 ## **Team 5. H&N (Here And Now)**
 
+![main photo](./img/ASSEMBLE_MAIN.PNG)
+
 <hr>
 
 ## **Team Member**
