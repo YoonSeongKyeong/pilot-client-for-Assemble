@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import 'antd/dist/antd.css';
 import './Chats.css'
-import { Icon, BackTop } from 'antd';
+import { Icon } from 'antd';
 import ChatList from './ChatList';
 import SubmitChat from '../antDesignComponents/SubmitChat';
 
@@ -23,7 +23,6 @@ class Chats extends React.Component {
         <div style={{ padding: '0 30px 30px 30px '}}>
           <ChatList chats={chats} name={name}/>
           <SubmitChat />
-          <BackTop />
         </div>
       </div>
     );
