@@ -225,6 +225,10 @@ export default function (state = initialState, action) {
             if(newPerson.name===state.recentNewPersonName) {
                 return state
             }
+            newPerson.avail_schedules_list=[]
+            newPerson.avail_places_list=[]
+            newPerson.activity_list=[]
+            newPerson.menu_list=[]
             return {
                 ...state,
                 people: [...state.people, action.newPerson],
